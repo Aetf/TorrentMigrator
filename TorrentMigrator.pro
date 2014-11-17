@@ -1,20 +1,19 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2014-11-18T00:03:22
-#
-#-------------------------------------------------
-
-QT       += core gui
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
+TEMPLATE = subdirs
 TARGET = TorrentMigrator
-TEMPLATE = app
+CONFIG += ordered
 
+SUBDIRS = \
+    app \
+    src \
+    tests
+OTHER_FILES += \
+    style.astylerc
 
-SOURCES += main.cpp\
-        mainwindow.cpp
+app.depends = src
+tests.depends = src
 
-HEADERS  += mainwindow.h
-
-FORMS    += mainwindow.ui
+# A custom target to directly run tests
+runtests.depends = all
+unix:runtests.commands = $${OUT_PWD}/tests/runtests.sh
+win32:runtests.commands = $${OUT_PWD}/tests/runtests.bat
+QMAKE_EXTRA_TARGETS += runtests
