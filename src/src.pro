@@ -3,9 +3,20 @@ TEMPLATE =  lib
 
 QT       -= gui
 
-TARGET   =  torrentMigrator
+TARGET   =  torrentBackends
 CONFIG   -= app_bundle
 
-SOURCES +=
+INCLUDEPATH += "/home/aetf/include/QBencode"
 
-HEADERS +=
+SOURCES += \
+    torrentrecord.cpp \
+    basictorrentmodel.cpp \
+    utorrentaccessor.cpp \
+    utils.cpp
+
+HEADERS += \
+    torrentrecord.h \
+    irecordsaccessor.h \
+    basictorrentmodel.h \
+    utorrentaccessor.h \
+    utils.h
