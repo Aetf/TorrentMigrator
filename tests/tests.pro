@@ -11,7 +11,9 @@ LIBS += -L/home/aetf/lib -lQBencode
 # Include gtest headers as a system header to avoid compiler warnings in it.
 QMAKE_INCDIR += gtest
 
-SOURCES += gtest/gtest-all-strip.cc gtest/main.cpp
+SOURCES += gtest/gtest-all-strip.cc gtest/main.cpp \
+    test_utorrentaccessor.cpp \
+    test_libtorrentaccessor.cpp
 
 # Test runner wrappers
 wrapper_scripts = runtests.sh runtests.bat

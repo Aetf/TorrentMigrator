@@ -2,6 +2,7 @@
 #define TORRENTRECORD_H
 
 #include <QByteArray>
+#include <QDebug>
 #include <QList>
 #include <QString>
 #include <QStringList>
@@ -9,7 +10,7 @@
 struct FileInfo
 {
     quint64 size;
-    quint64 mtime;
+    qint64 mtime;
     int priority;
 };
 
@@ -17,10 +18,13 @@ struct TorrentRecord
 {
     QString info_hash;
     QString save_path; // the parent directory
+    QString torrent_path;
+    QString name;
 
     // storage info
     uint block_size;
     uint piece_length;
+    quint64 piece_count;
     QByteArray pieces_we_have;
     QList<FileInfo> files;
 
@@ -36,13 +40,10 @@ struct TorrentRecord
 
     // per torrent settings
     int max_connections;
-    int max_uploads;
-    int upload_rate_limit;
-    int download_rate_limit;
     bool sequential_download;
     bool allow_dht;
     bool allow_lsd;
-    double radoi_limit;
+    double ratio_limit;
     bool super_seeding;
 
     // torrent state
@@ -54,6 +55,12 @@ struct TorrentRecord
 
     // labels
     QStringList labels;
+
+    enum CONSTANTS {
+        MAX_CONNECTIONS_NO = -1
+    };
 };
+
+QDebug &operator<<(QDebug &out, const TorrentRecord &rec);
 
 #endif // TORRENTRECORD_H

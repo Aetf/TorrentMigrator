@@ -12,11 +12,15 @@ SOURCES += \
     torrentrecord.cpp \
     basictorrentmodel.cpp \
     utorrentaccessor.cpp \
-    utils.cpp
+    utils.cpp \
+    libtorrentaccessor.cpp \
+    simpletorrentinfo.cpp
 
 HEADERS += \
     torrentrecord.h \
     irecordsaccessor.h \
     basictorrentmodel.h \
     utorrentaccessor.h \
-    utils.h
+    utils.h \
+    libtorrentaccessor.h \
+    simpletorrentinfo.h

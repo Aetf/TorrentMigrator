@@ -3,6 +3,7 @@
 
 #include <QBencodeValue>
 #include "irecordsaccessor.h"
+#include "simpletorrentinfo.h"
 
 class uTorrentAccessor : public IRecordsAccessor
 {
@@ -10,18 +11,36 @@ public:
     uTorrentAccessor();
     ~uTorrentAccessor();
 
+    /*!
+     * \brief setup
+     * \param args
+     *     "appdata" => path to appdata dir
+     *     "extratorrent" => path to extratorrent dir
+     * \return
+     */
     virtual bool setup(QVariantHash args);
-    virtual QList<TorrentRecord> readAll();
+    virtual bool readAll(QList<TorrentRecord> &list);
     virtual bool writeAll(QList<TorrentRecord> &records);
     virtual bool add(const TorrentRecord &record);
     virtual bool update(const TorrentRecord &record);
     virtual bool remove(const QString &hash);
 
 private:
+    bool fillStorageInfo(TorrentRecord &record, const QBencodeDict &uTorrentRecord,
+                         const QString &key);
+
+    std::pair<SimpleTorrentInfo, QString> locateTorrentFile(const QString &key);
+
     QString appdataPath;
+    QString extraTorrentPath;
     QBencodeDict resumeData;
 
     bool ready;
+
+    enum CONSTANTS {
+        MAX_CONNECTIONS_NO = -1,
+
+    };
 };
 
 #endif // UTORRENTACCESSOR_H

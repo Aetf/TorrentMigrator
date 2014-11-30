@@ -9,10 +9,10 @@
 class IRecordsAccessor
 {
 public:
-    virtual ~IRecordsAccessor() = 0;
+    virtual ~IRecordsAccessor() { }
 
     virtual bool setup(QVariantHash args) = 0;
-    virtual QList<TorrentRecord> readAll() = 0;
+    virtual bool readAll(QList<TorrentRecord> &list) = 0;
     virtual bool writeAll(QList<TorrentRecord> &records) = 0;
     virtual bool add(const TorrentRecord &record) = 0;
     virtual bool update(const TorrentRecord &record) = 0;
