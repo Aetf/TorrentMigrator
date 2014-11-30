@@ -1,2 +1,5 @@
-*.pro.user
+# QtCreator stuff
+*.pro.user*
+
+# build dir
 build/*
