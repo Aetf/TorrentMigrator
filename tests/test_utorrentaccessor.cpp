@@ -72,6 +72,10 @@ TEST_F(uTorrentAccessorTest, Remove)
 {
     IRecordsAccessor *ira = getConfigedAccessor();
 
-    QString hash;
+    QString hash("17adf84538492f47de042dc04d087e717c4de45a");
     EXPECT_EQ(true, ira->remove(hash)) << "remove failed";
+
+    QList<TorrentRecord> list;
+    ASSERT_EQ(true, ira->readAll(list));
+    EXPECT_EQ(78, list.size());
 }

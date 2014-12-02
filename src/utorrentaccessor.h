@@ -29,7 +29,9 @@ private:
     bool fillStorageInfo(TorrentRecord &record, const QBencodeDict &uTorrentRecord,
                          const QString &key);
 
-    std::pair<SimpleTorrentInfo, QString> locateTorrentFile(const QString &key);
+    std::pair<SimpleTorrentInfo, QString> loadTorrentFile(const QString &key);
+    bool loadResumeData();
+    bool writeResumeData();
 
     QString appdataPath;
     QString extraTorrentPath;

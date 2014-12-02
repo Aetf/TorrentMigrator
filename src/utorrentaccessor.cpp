@@ -24,6 +24,12 @@ bool uTorrentAccessor::setup(QVariantHash args)
     appdataPath = args["appdata"].toString();
     extraTorrentPath = args["extratorrent"].toString();
 
+    ready = loadResumeData();
+    return ready;
+}
+
+bool uTorrentAccessor::loadResumeData()
+{
     QFile resumeFile(appdataPath + "/resume.dat");
     if (!resumeFile.open(QIODevice::ReadOnly)) {
         qDebug() << "file open failed on" << resumeFile.fileName();
@@ -42,19 +48,38 @@ bool uTorrentAccessor::setup(QVariantHash args)
         return false;
     }
 
-    // remove .fileguard so uTorrent will accept the file
     resumeData = doc.value().toDict();
-    resumeData.remove(QString::fromUtf8(".fileguard"));
 
-    ready = true;
-    return ready;
+    return true;
+}
+
+bool uTorrentAccessor::writeResumeData()
+{
+    QFile resumeFile(appdataPath + "/resume.dat");
+    if (!resumeFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        qDebug() << "file open failed on" << resumeFile.fileName();
+        return false;
+    }
+
+    // remove .fileguard so uTorrent will accept the file
+    if (resumeData.contains(".fileguard")) {
+        resumeData.remove(QString::fromUtf8(".fileguard"));
+    }
+
+    QBencodeDocument doc;
+    doc.setValue(resumeData);
+    if (resumeFile.write(doc.toBencode()) == -1) {
+        qDebug() << "error when writing file" << resumeFile.fileName();
+        return false;
+    }
+    return true;
 }
 
 bool uTorrentAccessor::add(const TorrentRecord &/*record*/)
 {
     if (!ready) { return false; }
 
-    // FUTURE: uTorrentAccessor::add
+    // FUTURE: uTorrent: write support
     return false;
 }
 
@@ -64,11 +89,19 @@ bool uTorrentAccessor::remove(const QString &hash)
 
     for (auto key : resumeData.keys()) {
         if (resumeData[key].type() != QBencodeValue::Dict) { continue; }
-        auto dict = resumeData[key].toDict();
+        auto uTorrentRecord = resumeData[key].toDict();
 
         auto hashbytes = QByteArray::fromHex(hash.toLatin1());
-        if (dict["info"].toByteArray() == hashbytes) {
+        if (uTorrentRecord["info"].toByteArray() == hashbytes) {
+            auto pair = loadTorrentFile(key);
+            if (pair.first.isValid()) {
+                if (!QFile(pair.second).remove()) {
+                    qDebug() << "can't remove" << pair.second;
+                    return false;
+                }
+            }
             resumeData.remove(key);
+            if (!writeResumeData()) { return false; }
             return true;
         }
     }
@@ -78,7 +111,7 @@ bool uTorrentAccessor::remove(const QString &hash)
 bool uTorrentAccessor::update(const TorrentRecord &/*record*/)
 {
     if (!ready) { return false; }
-    // FUTURE: uTorrentAccessor::update
+    // FUTURE: uTorrent: write support
     /*
         for (auto key : resumeData.keys()) {
             if (resumeData[key].type() != QBencodeValue::Dict) continue;
@@ -125,18 +158,17 @@ bool uTorrentAccessor::readAll(QList<TorrentRecord> &list)
         if (record.max_connections == MAX_CONNECTIONS_NO) {
             record.max_connections = TorrentRecord::MAX_CONNECTIONS_NO;
         }
-        // TODO: sequential download
+        // FUTURE: uTorrent: sequential download
         record.sequential_download = false;
-        // TODO: uTorrent dht meaning
+        // FUTURE: uTorrent: dht meaning
         record.allow_dht = Utils::dictFindInt(uTorrentRecord, "dht", 2) != 2;
         record.allow_lsd = Utils::dictFindInt(uTorrentRecord, "lsd", 0) != 0;
         record.ratio_limit = Utils::dictFindInt(uTorrentRecord, "wanted_ratio", 0);
         record.super_seeding = Utils::dictFindInt(uTorrentRecord, "superseed", 0) != 0;
 
         // torrent state
-        // FUTURE: download mode support
+        // FUTURE: uTorrent: download mode support
         record.seed_mode = 1;
-        // FUTURE: pause state change
         record.paused = true;
 
         // trackers
@@ -145,7 +177,7 @@ bool uTorrentAccessor::readAll(QList<TorrentRecord> &list)
         }
 
         // labels
-        // TODO: finer test this on labels
+        // TODO: uTorrent: multi label support
         record.labels.append(uTorrentRecord["label"].toString());
         for (auto labelentry : uTorrentRecord["labels"].toList()) {
             record.labels.append(labelentry.toString());
@@ -168,9 +200,10 @@ bool uTorrentAccessor::writeAll(QList<TorrentRecord> &records)
     return true;
 }
 
-bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record, const QBencodeDict &uTorrentRecord, const QString &key)
+bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record,
+                                       const QBencodeDict &uTorrentRecord, const QString &key)
 {
-    auto pair = locateTorrentFile(key);
+    auto pair = loadTorrentFile(key);
     if (!pair.first.isValid()) {
         qDebug() << "can't find a torrent file for the record" << key;
         return false;
@@ -201,7 +234,7 @@ bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record, const QBencodeDict
         return false;
     }
 
-    for (int i = 0; i!= ti.fileSizes().size(); i++) {
+    for (int i = 0; i != ti.fileSizes().size(); i++) {
         FileInfo fi;
         fi.size = ti.fileSizes()[i];
         fi.mtime = ti.fileMTimes()[i];
@@ -213,7 +246,8 @@ bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record, const QBencodeDict
     return true;
 }
 
-std::pair<SimpleTorrentInfo, QString> uTorrentAccessor::locateTorrentFile(const QString &key)
+std::pair<SimpleTorrentInfo, QString> uTorrentAccessor::loadTorrentFile(
+    const QString &key)
 {
     // Qt can't handle back slash when compiled in linux
     // so change all to slash
@@ -225,14 +259,14 @@ std::pair<SimpleTorrentInfo, QString> uTorrentAccessor::locateTorrentFile(const 
     // try appdata dir first
     dir.setPath(appdataPath);
     fullpath = dir.filePath(filename);
-    if (ti.loadFile(fullpath)) return std::make_pair(ti, fullpath);
+    if (ti.loadFile(fullpath)) { return std::make_pair(ti, fullpath); }
 
     // then try extra torrent dir if we have one
     if (!extraTorrentPath.isEmpty()) {
         dir.setPath(extraTorrentPath);
         if (dir.exists()) {
             fullpath = dir.filePath(filename);
-            if (ti.loadFile(fullpath)) return std::make_pair(ti, fullpath);
+            if (ti.loadFile(fullpath)) { return std::make_pair(ti, fullpath); }
         }
     }
 
