@@ -104,7 +104,7 @@ bool LibtorrentAccessor::add(const TorrentRecord &/*record*/)
 {
     if (!ready) { return false; }
 
-    // TODO: write support for libtorrent
+    // TODO: libtorrent: write support
     return false;
 }
 
@@ -112,7 +112,7 @@ bool LibtorrentAccessor::update(const TorrentRecord &/*record*/)
 {
     if (!ready) { return false; }
 
-    // TODO: write support for libtorrent
+    // TODO: libtorrent: write support
     return false;
 }
 
@@ -120,7 +120,7 @@ bool LibtorrentAccessor::remove(const QString &/*hash*/)
 {
     if (!ready) { return false; }
 
-    // TODO: write support for libtorrent
+    // TODO: libtorrent: write support
     return false;
 }
 
@@ -196,7 +196,7 @@ void LibtorrentAccessor::fillRatioLimit(TorrentRecord &record, const QString &ha
     auto temp = getRatioLimit(hash);
 
     if (temp == USE_GLOBAL_RATIO) {
-        // TODO: handle global ratio
+        // TODO: libtorrent: handle global ratio
     }
     record.ratio_limit = temp;
 }
@@ -214,7 +214,7 @@ void LibtorrentAccessor::fillTrackers(TorrentRecord &record, const QString &hash
 
 void LibtorrentAccessor::fillLabels(TorrentRecord &record, const QString &hash)
 {
-    // TODO: multi label support
+    // TODO: libtorrent: multi label support
     record.labels.clear();
     record.labels.append(getResumeValue(hash, "qBt-label").toString());
 }
