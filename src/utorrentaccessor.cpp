@@ -177,7 +177,7 @@ bool uTorrentAccessor::readAll(QList<TorrentRecord> &list)
         }
 
         // labels
-        // TODO: uTorrent: multi label support
+        // FUTURE: uTorrent: multi label support
         record.labels.append(uTorrentRecord["label"].toString());
         for (auto labelentry : uTorrentRecord["labels"].toList()) {
             record.labels.append(labelentry.toString());
