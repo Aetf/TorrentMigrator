@@ -72,6 +72,10 @@ TEST_F(LibtorrentAccessorTest, Remove)
 {
     IRecordsAccessor *ira = getConfigedAccessor();
 
-    QString hash;
+    QString hash("e3c1533f92df93db60a5c139dfc22a53e4995be1");
     EXPECT_EQ(true, ira->remove(hash)) << "remove failed";
+
+    QList<TorrentRecord> list;
+    ASSERT_EQ(true, ira->readAll(list));
+    EXPECT_EQ(18, list.size());
 }
