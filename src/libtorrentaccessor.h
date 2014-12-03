@@ -6,6 +6,7 @@
 #include "torrentrecord.h"
 #include "simpletorrentinfo.h"
 
+class QBencodeDict;
 
 class LibtorrentAccessor : public IRecordsAccessor
 {
@@ -38,7 +39,19 @@ private:
     QStringList recordHashs();
     void deleteConfRecord(const QString &hash);
 
-    bool fillStorageInfo(TorrentRecord &record, const QString &hash, const SimpleTorrentInfo &ti);
+    // default record
+    QVariantHash initializeConfig(const QString &hash);
+    QBencodeDict initializeFastResume(const QString &hash);
+
+    // write back fastresume
+    void writeFileInfos(QBencodeDict &resumeData, const TorrentRecord &record);
+    void writeMaxConnections(QBencodeDict &resumeData, const TorrentRecord &record);
+    void writeTrackers(QBencodeDict &resumeData, const TorrentRecord &record);
+    void writeLabels(QBencodeDict &resumeData, const TorrentRecord &record);
+
+    // parse fastresume
+    bool fillStorageInfo(TorrentRecord &record, const QString &hash,
+                         const SimpleTorrentInfo &ti);
     void fillFileInfos(TorrentRecord &record, const QString &hash);
     void fillLastActive(TorrentRecord &record, const QString &hash);
     void fillMaxConnections(TorrentRecord &record, const QString &hash);
@@ -48,13 +61,16 @@ private:
 
     // info in config
     void setConfValue(const QString &hash, const QString &key, const QVariant &value);
+    bool insertConfRecord(const QString &hash, const QVariantHash &record);
     QVariant getConfValue(const QString &hash, const QString &key,
                           const QVariant &defaultVal = QVariant()) const;
     // info in fastresume
     bool hasResumeData(const QString &hash) const;
+    bool saveResumeData(const QString &hash, const QBencodeDict &resumeData);
     QVariant getResumeValue(const QString &hash, const QString &key,
                             const QVariant &defaultVal = QVariant()) const;
     // info in torrent file
+    QString getTorrentFilePath(const QString &hash) const;
     std::pair<SimpleTorrentInfo, QString> locateTorrentFile(const QString &hash);
 
     // convinent getters and setters
