@@ -1,33 +1,39 @@
 #include <QBencodeValue>
 #include "basictorrentmodel.h"
+#include "basictorrentitem.h"
 
 BasicTorrentModel::BasicTorrentModel(IRecordsAccessor *accessor, QObject *parent)
-    : QAbstractTableModel(parent), accessor(accessor), dirtyCache(false)
+    : QAbstractTableModel(parent), accessor(accessor)
 {
-    accessor->readAll(recordCache);
+    pullData();
 }
 
 BasicTorrentModel::~BasicTorrentModel()
 {
+    clear();
     delete accessor;
 }
 
 Qt::ItemFlags BasicTorrentModel::flags(const QModelIndex &index) const
 {
-    return QAbstractTableModel::flags(index);
+    if (!inRange(index)) {
+        return QAbstractTableModel::flags(index);
+    } else {
+        return items[index.row()]->flags();
+    }
 }
 
 QVariant BasicTorrentModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()) {
+    if (!inRange(index)) {
         return QVariant();
     }
 
-    if (role == Qt::DisplayRole) {
-        return displayData(index);
-    } else {
-        return QVariant();
+    if (index.column() == Col_No) {
+        return index.row();
     }
+
+    return items[index.row()]->data(index.column(), role);
 }
 
 QVariant BasicTorrentModel::headerData(int section, Qt::Orientation orientation,
@@ -53,62 +59,92 @@ QVariant BasicTorrentModel::headerData(int section, Qt::Orientation orientation,
     }
 }
 
-int BasicTorrentModel::rowCount(const QModelIndex &/*parent*/) const
+int BasicTorrentModel::rowCount(const QModelIndex &parent) const
 {
-    return recordCache.size();
+    if (parent.isValid()) { return 0; }
+    return items.size();
 }
 
-int BasicTorrentModel::columnCount(const QModelIndex &/*parent*/) const
+int BasicTorrentModel::columnCount(const QModelIndex &parent) const
 {
-    return 4;
+    if (parent.isValid()) { return 0; }
+    return ColCount;
 }
 
 bool BasicTorrentModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!index.isValid()) {
+    if (!inRange(index)) {
         return false;
     }
 
-    if (role != Qt::UserRole) {
+    if (!items[index.row()]->setData(value, role)) { return false; }
+    emit dataChanged(index, index);
+    return true;
+}
+
+bool BasicTorrentModel::insertRows(int row, int count, const QModelIndex &parent)
+{
+    if (parent.isValid()) {
         return false;
     }
 
-    auto benval = QBencodeValue::fromVariant(value);
-    if (benval.isUndefined()) {
+    beginInsertRows(parent, row, row + count - 1);
+    while (count--) {
+        items.insert(row, new BasicTorrentItem(this));
+    }
+    endInsertRows();
+    return true;
+}
+
+bool BasicTorrentModel::insertRows(int position, const QList<BasicTorrentItem *> rows)
+{
+    beginInsertRows(QModelIndex(), position, position + rows.size() - 1);
+    for (auto row : rows) {
+        items.insert(position, row);
+    }
+    endInsertRows();
+    return true;
+}
+
+bool BasicTorrentModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    if (parent.isValid()) {
         return false;
     }
-    return false;
-}
 
-bool BasicTorrentModel::insertRows(int /*row*/, int /*count*/,
-                                   const QModelIndex &/*parent*/)
-{
-    // FUTURE: BasicTorrentModel::insertRows
-    return false;
-}
-
-bool BasicTorrentModel::removeRows(int /*row*/, int /*count*/,
-                                   const QModelIndex &/*parent*/)
-{
-    // FUTURE: BasicTorrentModel::removeRows
-    return false;
-}
-
-void BasicTorrentModel::flush()
-{
-    // FUTURE: BasicTorrentModel::flush
-}
-
-QVariant BasicTorrentModel::displayData(const QModelIndex &/*index*/) const
-{
-    // FUTURE: BasicTorrentModel::displayData
-    return QVariant();
-}
-
-void BasicTorrentModel::ensureCache()
-{
-    if (dirtyCache) {
-        accessor->readAll(recordCache);
-        dirtyCache = false;
+    if (row + count > items.size()) {
+        return false;
     }
+
+    beginRemoveRows(parent, row, row + count - 1);
+    while (count--) {
+        items.removeAt(row);
+    }
+    endRemoveRows();
+    return false;
+}
+
+bool BasicTorrentModel::inRange(const QModelIndex &index) const
+{
+    return index.isValid() && index.row() >= 0 && index.row() < items.size()
+           && index.column() >= 0 && index.column() < 5;
+}
+
+void BasicTorrentModel::clear()
+{
+    qDeleteAll(items);
+    items.clear();
+}
+
+bool BasicTorrentModel::pullData()
+{
+    QList<TorrentRecord> records;
+    if (!accessor->readAll(records)) { return false; }
+
+    clear();
+    QList<BasicTorrentItem *> rowsToInsert;
+    for (auto record : records) {
+        rowsToInsert << new BasicTorrentItem(this, record);
+    }
+    return insertRows(0, rowsToInsert);
 }

@@ -15,7 +15,8 @@ SOURCES  += \
     utorrentaccessor.cpp \
     utils.cpp \
     libtorrentaccessor.cpp \
-    simpletorrentinfo.cpp
+    simpletorrentinfo.cpp \
+    basictorrentitem.cpp
 
 HEADERS  += \
     torrentrecord.h \
@@ -24,4 +25,5 @@ HEADERS  += \
     utorrentaccessor.h \
     utils.h \
     libtorrentaccessor.h \
-    simpletorrentinfo.h
+    simpletorrentinfo.h \
+    basictorrentitem.h

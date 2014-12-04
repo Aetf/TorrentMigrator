@@ -8,7 +8,8 @@
 #include "irecordsaccessor.h"
 #include "torrentrecord.h"
 
-class TorrentItem;
+class BasicTorrentItem;
+
 class BasicTorrentModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -25,25 +26,40 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
-    virtual bool insertRows(int row, int count, const QModelIndex &parent);
-    virtual bool removeRows(int row, int count, const QModelIndex &parent);
+    virtual bool setData(const QModelIndex &index, const QVariant &value,
+                         int role = Qt::DisplayRole);
+    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
 public slots:
-    void flush();
+    bool pullData();
+    void clear();
 
 protected:
-    TorrentItem *createItem();
-    QVariant displayData(const QModelIndex &index) const;
-    inline void ensureCache();
+    bool insertRows(int position, const QList<BasicTorrentItem *> rows);
+    bool inRange(const QModelIndex &index) const;
 
 signals:
 
 private:
     IRecordsAccessor *accessor;
 
-    QList<TorrentRecord> recordCache;
-    bool dirtyCache;
+    QList<BasicTorrentItem *> items;
+
+    friend class BasicTorrentItem;
+
+    enum Roles {
+        RecordDataRole,
+    };
+
+    enum Columns {
+        Col_No = 0,
+        Col_Name,
+        Col_TorrentPath,
+        Col_SavePath,
+        Col_TorrentState,
+        ColCount,
+    };
 };
 
 #endif // ABSTRACTECORDSACCESSOR_H

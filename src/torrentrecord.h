@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QDebug>
 #include <QList>
+#include <QMetaType>
 #include <QString>
 #include <QStringList>
 
@@ -60,6 +61,7 @@ struct TorrentRecord
         MAX_CONNECTIONS_NO = -1
     };
 };
+Q_DECLARE_METATYPE(TorrentRecord)
 
 QDebug &operator<<(QDebug &out, const TorrentRecord &rec);
 
