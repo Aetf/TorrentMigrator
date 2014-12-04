@@ -104,8 +104,12 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
 {
     if (!ready) { return false; }
 
+    // skip already known torrent
+
+
     // step 1. generate fastresume file
     auto resumeData = initializeFastResume(record.info_hash);
+    if (record.block_size == 0) { return false; }
     resumeData["blocks per piece"] = record.piece_length / record.block_size;
     resumeData["pieces"] = record.pieces_we_have;
     writeFileInfos(resumeData, record);
@@ -183,12 +187,25 @@ bool LibtorrentAccessor::update(const TorrentRecord &/*record*/)
     return false;
 }
 
-bool LibtorrentAccessor::remove(const QString &/*hash*/)
+bool LibtorrentAccessor::remove(const QString &hash)
 {
     if (!ready) { return false; }
 
-    // TODO: libtorrent: write support (remove)
-    return false;
+    // step 1. remove fastresume data
+    QFile fastresume(backupDir + "/" + hash + ".fastresume");
+    if (!fastresume.remove()) {
+        qDebug() << "remove" << fastresume.fileName() << "failed";
+        return false;
+    }
+    // step 2. remove torrent file
+    QFile torrentfile(getTorrentFilePath(hash));
+    if (!torrentfile.remove()) {
+        qDebug() << "remove" << torrentfile.fileName() << "failed";
+        return false;
+    }
+    // step 3. remove config record
+    deleteConfRecord(hash);
+    return true;
 }
 
 QVariantHash LibtorrentAccessor::initializeConfig(const QString &/*hash*/)
@@ -283,6 +300,12 @@ QStringList LibtorrentAccessor::recordHashs()
 {
     QSettings settings(configDir + "/qBittorrent-resume.conf", QSettings::IniFormat);
     return settings.value("torrents").toHash().keys();
+}
+
+bool LibtorrentAccessor::knownTorrent(const QString &hash)
+{
+    QSettings settings(configDir + "/qBittorrent-resume.conf", QSettings::IniFormat);
+    return settings.value("torrents").toHash().contains(hash);
 }
 
 void LibtorrentAccessor::deleteConfRecord(const QString &hash)

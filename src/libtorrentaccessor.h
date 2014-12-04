@@ -37,7 +37,7 @@ private:
     };
 
     QStringList recordHashs();
-    void deleteConfRecord(const QString &hash);
+    bool knownTorrent(const QString &hash);
 
     // default record
     QVariantHash initializeConfig(const QString &hash);
@@ -62,6 +62,7 @@ private:
     // info in config
     void setConfValue(const QString &hash, const QString &key, const QVariant &value);
     bool insertConfRecord(const QString &hash, const QVariantHash &record);
+    void deleteConfRecord(const QString &hash);
     QVariant getConfValue(const QString &hash, const QString &key,
                           const QVariant &defaultVal = QVariant()) const;
     // info in fastresume
