@@ -5,10 +5,11 @@ QT       -= gui
 
 TARGET   =  torrentBackends
 CONFIG   -= app_bundle
+CONFIG   += staticlib
 
-LIBS += -L/home/aetf/lib -lQBencode
+LIBS     += -L/home/aetf/lib -lQBencode
 
-SOURCES += \
+SOURCES  += \
     torrentrecord.cpp \
     basictorrentmodel.cpp \
     utorrentaccessor.cpp \
@@ -16,7 +17,7 @@ SOURCES += \
     libtorrentaccessor.cpp \
     simpletorrentinfo.cpp
 
-HEADERS += \
+HEADERS  += \
     torrentrecord.h \
     irecordsaccessor.h \
     basictorrentmodel.h \
