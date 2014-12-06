@@ -12,10 +12,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    hideLeftConfig();
-    hideRightConfig();
-    clearStackedWidget(ui->backendConfLeft);
-    clearStackedWidget(ui->backendConfRight);
+    backendConfs[0] = ui->backendConfLeft;
+    backendConfs[1] = ui->backendConfRight;
+    torrentViews[0] = ui->torrentViewLeft;
+    torrentViews[1] = ui->torrentViewRight;
+
+    for (int i = 0; i!= 2; i++) {
+        hideConfig(i);
+        clearStackedWidget(backendConfs[i]);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -34,96 +39,58 @@ void MainWindow::clearStackedWidget(QStackedWidget *widget)
 
 void MainWindow::prepareAndShowLeftConfigPanel(const QString &backend)
 {
-    QWidget *confPanel = nullptr;
-    if (backend.compare("utorrent", Qt::CaseInsensitive) == 0) {
-        auto panel = new uTorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
-                SLOT(acceptLeftConfig(IRecordsAccessor *)));
-        confPanel = panel;
-    } else if (backend.compare("qbittorrent", Qt::CaseInsensitive) == 0) {
-        auto panel = new qBittorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
-                SLOT(acceptLeftConfig(IRecordsAccessor *)));
-        confPanel = panel;
-    } else {
-        return;
-    }
-
-    clearStackedWidget(ui->backendConfLeft);
-    ui->backendConfLeft->addWidget(confPanel);
-    showLeftConfig();
+    prepareAndShowConfigPanel(backend, 0);
 }
 
 void MainWindow::prepareAndShowRightConfigPanel(const QString &backend)
 {
-    QWidget *confPanel = nullptr;
+    prepareAndShowConfigPanel(backend, 1);
+}
+
+void MainWindow::prepareAndShowConfigPanel(const QString &backend, int which)
+{
+    AbstractConfPanel *confPanel = nullptr;
     if (backend.compare("utorrent", Qt::CaseInsensitive) == 0) {
-        auto panel = new uTorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
-                SLOT(acceptRightConfig(IRecordsAccessor *)));
-        confPanel = panel;
+        confPanel = new uTorrentConfPanel(this);
     } else if (backend.compare("qbittorrent", Qt::CaseInsensitive) == 0) {
-        auto panel = new qBittorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
-                SLOT(acceptRightConfig(IRecordsAccessor *)));
-        confPanel = panel;
+        confPanel = new qBittorrentConfPanel(this);
     } else {
         return;
     }
+    confPanel->setId(which);
+    connect(confPanel, SIGNAL(accept(int, IRecordsAccessor *)),
+            SLOT(acceptConfig(int, IRecordsAccessor *)));
 
-    clearStackedWidget(ui->backendConfRight);
-    ui->backendConfRight->addWidget(confPanel);
-    showRightConfig();
+    clearStackedWidget(backendConfs[which]);
+    backendConfs[which]->addWidget(confPanel);
+    showConfig(which);
 }
 
-void MainWindow::acceptLeftConfig(IRecordsAccessor *accessor)
+void MainWindow::acceptConfig(int id, IRecordsAccessor *accessor)
 {
-    hideLeftConfig();
-    auto old = ui->torrentViewLeft->model();
-    ui->torrentViewLeft->setModel(new BasicTorrentModel(accessor, this));
+    hideConfig(id);
+    auto old = torrentViews[id]->model();
+    torrentViews[id]->setModel(new BasicTorrentModel(accessor, this));
     if (old) { delete old; }
 
-    configHeaderViewFor(ui->torrentViewLeft);
+    configHeaderViewFor(torrentViews[id]);
 }
 
-void MainWindow::acceptRightConfig(IRecordsAccessor *accessor)
+void MainWindow::hideConfig(int which)
 {
-    hideRightConfig();
-    auto old = ui->torrentViewRight->model();
-    ui->torrentViewRight->setModel(new BasicTorrentModel(accessor, this));
-    if (old) { delete old; }
-
-    configHeaderViewFor(ui->torrentViewLeft);
+    backendConfs[which]->hide();
+    //    backendConf[which]->setMaximumHeight(0);
 }
 
-void MainWindow::hideLeftConfig()
+void MainWindow::showConfig(int which)
 {
-    ui->backendConfLeft->hide();
-    //    ui->backendConfLeft->setMaximumHeight(0);
-}
-
-void MainWindow::hideRightConfig()
-{
-    ui->backendConfRight->hide();
-    //    ui->backendConfRight->setMaximumHeight(0);
-}
-
-void MainWindow::showLeftConfig()
-{
-    ui->backendConfLeft->show();
-
-    //    QPropertyAnimation *anim = new QPropertyAnimation(ui->backendConfLeft, "maximumHeight");
+    backendConfs[which]->show();
+    //    QPropertyAnimation *anim = new ertyAnimation(ui->backendConfLeft, "maximumHeight");
     //    anim->setStartValue(0);
     //    anim->setDuration(10000);
     //    anim->setEndValue(QWIDGETSIZE_MAX);
     //    anim->start();
-    //    ui->backendConfLeft->setMaximumHeight(QWIDGETSIZE_MAX);
-}
-
-void MainWindow::showRightConfig()
-{
-    ui->backendConfRight->show();
-    //    ui->backendConfRight->setMaximumHeight(0);
+    //    backendConf[which]->setMaximumHeight(QWIDGETSIZE_MAX);
 }
 
 void MainWindow::configHeaderViewFor(QTableView *view)

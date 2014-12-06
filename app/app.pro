@@ -20,7 +20,8 @@ SOURCES  += \
 HEADERS  += \
     mainwindow.h \
     utorrentconfpanel.h \
-    qbittorrentconfpanel.h
+    qbittorrentconfpanel.h \
+    abstractconfpanel.h
 
 FORMS    += \
     mainwindow.ui \

@@ -107,15 +107,15 @@
    <sender>okBtn</sender>
    <signal>clicked()</signal>
    <receiver>uTorrentConfPanel</receiver>
-   <slot>okBtnClicked()</slot>
+   <slot>emitAccept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>319</x>
-     <y>86</y>
+     <x>344</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
-     <x>270</x>
-     <y>87</y>
+     <x>261</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>
@@ -123,6 +123,6 @@
  <slots>
   <slot>browseAppdata()</slot>
   <slot>browseExtraTorrents()</slot>
-  <slot>okBtnClicked()</slot>
+  <slot>emitAccept()</slot>
  </slots>
 </ui>

@@ -5,7 +5,7 @@
 #include "utorrentaccessor.h"
 
 uTorrentConfPanel::uTorrentConfPanel(QWidget *parent) :
-    QWidget(parent),
+    AbstractConfPanel(parent),
     ui(new Ui::uTorrentConfPanel)
 {
     ui->setupUi(this);
@@ -40,7 +40,7 @@ void uTorrentConfPanel::browseExtraTorrents()
     }
 }
 
-IRecordsAccessor *uTorrentConfPanel::getConfigedAccessor() const
+IRecordsAccessor *uTorrentConfPanel::configedAccessor() const
 {
     auto accessor = new uTorrentAccessor;
     QVariantHash args;
@@ -48,9 +48,4 @@ IRecordsAccessor *uTorrentConfPanel::getConfigedAccessor() const
     args["extratorrent"] = ui->extraTorrentsPathEdit->text();
     accessor->setup(args);
     return accessor;
-}
-
-void uTorrentConfPanel::okBtnClicked()
-{
-    emit accept(getConfigedAccessor());
 }

@@ -1,7 +1,7 @@
 #ifndef UTORRENTCONFPANEL_H
 #define UTORRENTCONFPANEL_H
 
-#include <QWidget>
+#include "abstractconfpanel.h"
 
 namespace Ui {
 class uTorrentConfPanel;
@@ -9,7 +9,7 @@ class uTorrentConfPanel;
 
 class IRecordsAccessor;
 
-class uTorrentConfPanel : public QWidget
+class uTorrentConfPanel : public AbstractConfPanel
 {
     Q_OBJECT
 
@@ -17,17 +17,11 @@ public:
     explicit uTorrentConfPanel(QWidget *parent = 0);
     ~uTorrentConfPanel();
 
-    IRecordsAccessor *getConfigedAccessor() const;
-
-signals:
-    void accept(IRecordsAccessor *);
+    virtual IRecordsAccessor *configedAccessor() const;
 
 public slots:
     void browseAppdata();
     void browseExtraTorrents();
-
-private slots:
-    void okBtnClicked();
 
 private:
     Ui::uTorrentConfPanel *ui;

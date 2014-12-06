@@ -107,15 +107,15 @@
    <sender>okBtn</sender>
    <signal>clicked()</signal>
    <receiver>qBittorrentConfPanel</receiver>
-   <slot>okBtnClicked()</slot>
+   <slot>emitAccept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>278</x>
-     <y>87</y>
+     <x>288</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
-     <x>195</x>
-     <y>95</y>
+     <x>201</x>
+     <y>92</y>
     </hint>
    </hints>
   </connection>
@@ -123,6 +123,6 @@
  <slots>
   <slot>browseConfigDir()</slot>
   <slot>browseBackupDir()</slot>
-  <slot>okBtnClicked()</slot>
+  <slot>emitAccept()</slot>
  </slots>
 </ui>

@@ -4,7 +4,7 @@
 #include "libtorrentaccessor.h"
 
 qBittorrentConfPanel::qBittorrentConfPanel(QWidget *parent) :
-    QWidget(parent),
+    AbstractConfPanel(parent),
     ui(new Ui::qBittorrentConfPanel)
 {
     ui->setupUi(this);
@@ -39,7 +39,7 @@ void qBittorrentConfPanel::browseBackupDir()
     }
 }
 
-IRecordsAccessor *qBittorrentConfPanel::getConfigedAccessor() const
+IRecordsAccessor *qBittorrentConfPanel::configedAccessor() const
 {
     auto accessor = new LibtorrentAccessor;
     QVariantHash args;
@@ -47,9 +47,4 @@ IRecordsAccessor *qBittorrentConfPanel::getConfigedAccessor() const
     args["backupDir"] = ui->backupDirPathEdit->text();
     accessor->setup(args);
     return accessor;
-}
-
-void qBittorrentConfPanel::okBtnClicked()
-{
-    emit accept(getConfigedAccessor());
 }

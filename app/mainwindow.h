@@ -21,20 +21,20 @@ public:
 protected slots:
     void prepareAndShowLeftConfigPanel(const QString &backend);
     void prepareAndShowRightConfigPanel(const QString &backend);
-    void acceptLeftConfig(IRecordsAccessor *accessor);
-    void acceptRightConfig(IRecordsAccessor *accessor);
+    void prepareAndShowConfigPanel(const QString &backend, int which);
+    void acceptConfig(int id, IRecordsAccessor *accessor);
 
 private:
     void clearStackedWidget(QStackedWidget *widget);
-    void hideLeftConfig();
-    void hideRightConfig();
-    void showLeftConfig();
-    void showRightConfig();
+    void hideConfig(int which);
+    void showConfig(int which);
 
     void configHeaderViewFor(QTableView *view);
 
 private:
     Ui::MainWindow *ui;
+    QStackedWidget *backendConfs[2];
+    QTableView *torrentViews[2];
 };
 
 #endif // MAINWINDOW_H
