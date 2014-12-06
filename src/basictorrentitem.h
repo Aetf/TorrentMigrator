@@ -8,7 +8,8 @@ class BasicTorrentModel;
 class BasicTorrentItem
 {
 public:
-    BasicTorrentItem(BasicTorrentModel *m_model, const TorrentRecord &m_record = TorrentRecord());
+    BasicTorrentItem(BasicTorrentModel *m_model,
+                     const TorrentRecord &m_record = TorrentRecord());
     ~BasicTorrentItem();
 
     QVariant data(int column = 0, int role = Qt::DisplayRole) const;

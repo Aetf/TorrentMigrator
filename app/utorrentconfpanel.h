@@ -20,7 +20,7 @@ public:
     IRecordsAccessor *getConfigedAccessor() const;
 
 signals:
-    void accept(IRecordsAccessor*);
+    void accept(IRecordsAccessor *);
 
 public slots:
     void browseAppdata();

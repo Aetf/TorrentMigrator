@@ -71,7 +71,8 @@ int BasicTorrentModel::columnCount(const QModelIndex &parent) const
     return ColCount;
 }
 
-bool BasicTorrentModel::insertRowsWithoutAddToBackend(int position, const QList<BasicTorrentItem *> rows)
+bool BasicTorrentModel::insertRowsWithoutAddToBackend(int position,
+                                                      const QList<BasicTorrentItem *> rows)
 {
     QModelIndex idx;
     beginInsertRows(idx, position, position + rows.size() - 1);

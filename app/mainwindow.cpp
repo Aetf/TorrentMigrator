@@ -38,11 +38,13 @@ void MainWindow::prepareAndShowLeftConfigPanel(const QString &backend)
     QWidget *confPanel = nullptr;
     if (backend.compare("utorrent", Qt::CaseInsensitive) == 0) {
         auto panel = new uTorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor*)), SLOT(acceptLeftConfig(IRecordsAccessor*)));
+        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
+                SLOT(acceptLeftConfig(IRecordsAccessor *)));
         confPanel = panel;
     } else if (backend.compare("qbittorrent", Qt::CaseInsensitive) == 0) {
         auto panel = new qBittorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor*)), SLOT(acceptLeftConfig(IRecordsAccessor*)));
+        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
+                SLOT(acceptLeftConfig(IRecordsAccessor *)));
         confPanel = panel;
     } else {
         return;
@@ -58,11 +60,13 @@ void MainWindow::prepareAndShowRightConfigPanel(const QString &backend)
     QWidget *confPanel = nullptr;
     if (backend.compare("utorrent", Qt::CaseInsensitive) == 0) {
         auto panel = new uTorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor*)), SLOT(acceptRightConfig(IRecordsAccessor*)));
+        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
+                SLOT(acceptRightConfig(IRecordsAccessor *)));
         confPanel = panel;
     } else if (backend.compare("qbittorrent", Qt::CaseInsensitive) == 0) {
         auto panel = new qBittorrentConfPanel(this);
-        connect(panel, SIGNAL(accept(IRecordsAccessor*)), SLOT(acceptRightConfig(IRecordsAccessor*)));
+        connect(panel, SIGNAL(accept(IRecordsAccessor *)),
+                SLOT(acceptRightConfig(IRecordsAccessor *)));
         confPanel = panel;
     } else {
         return;
