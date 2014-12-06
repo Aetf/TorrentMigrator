@@ -49,6 +49,7 @@ bool LibtorrentAccessor::readAll(QList<TorrentRecord> &list)
         TorrentRecord record;
         record.info_hash = hash;
         record.save_path = getSavePath(hash);
+        record.torrent_path = pair.second;
         record.name = ti.name();
 
         // storage info
