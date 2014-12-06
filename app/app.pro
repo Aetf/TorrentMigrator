@@ -7,6 +7,7 @@ CONFIG   -= app_bundle
 
 
 # Link to library to be tested
+PRE_TARGETDEPS += ../src/libtorrentBackends.a
 LIBS     += -L../src -ltorrentBackends
 LIBS     += -L/home/aetf/lib -lQBencode
 

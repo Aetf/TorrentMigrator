@@ -3,8 +3,8 @@ TARGET = TorrentMigrator
 CONFIG += ordered
 
 SUBDIRS = \
-    app \
     src \
+    app \
     tests
 OTHER_FILES += \
     style.astylerc
