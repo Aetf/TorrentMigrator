@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent) :
     hideRightConfig();
     clearStackedWidget(ui->backendConfLeft);
     clearStackedWidget(ui->backendConfRight);
-
 }
 
 MainWindow::~MainWindow()
@@ -83,6 +82,8 @@ void MainWindow::acceptLeftConfig(IRecordsAccessor *accessor)
     auto old = ui->torrentViewLeft->model();
     ui->torrentViewLeft->setModel(new BasicTorrentModel(accessor, this));
     if (old) { delete old; }
+
+    configHeaderViewFor(ui->torrentViewLeft);
 }
 
 void MainWindow::acceptRightConfig(IRecordsAccessor *accessor)
@@ -91,6 +92,8 @@ void MainWindow::acceptRightConfig(IRecordsAccessor *accessor)
     auto old = ui->torrentViewRight->model();
     ui->torrentViewRight->setModel(new BasicTorrentModel(accessor, this));
     if (old) { delete old; }
+
+    configHeaderViewFor(ui->torrentViewLeft);
 }
 
 void MainWindow::hideLeftConfig()
@@ -121,4 +124,13 @@ void MainWindow::showRightConfig()
 {
     ui->backendConfRight->show();
     //    ui->backendConfRight->setMaximumHeight(0);
+}
+
+void MainWindow::configHeaderViewFor(QTableView *view)
+{
+    view->horizontalHeader()->setSectionResizeMode(BasicTorrentModel::Col_No,
+                                                   QHeaderView::ResizeToContents);
+    view->horizontalHeader()->setSectionResizeMode(BasicTorrentModel::Col_State,
+                                                   QHeaderView::ResizeToContents);
+    view->horizontalHeader()->setSectionsMovable(true);
 }

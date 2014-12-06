@@ -7,6 +7,7 @@ namespace Ui {
 class MainWindow;
 }
 class QStackedWidget;
+class QTableView;
 class IRecordsAccessor;
 
 class MainWindow : public QMainWindow
@@ -29,6 +30,8 @@ private:
     void hideRightConfig();
     void showLeftConfig();
     void showRightConfig();
+
+    void configHeaderViewFor(QTableView *view);
 
 private:
     Ui::MainWindow *ui;

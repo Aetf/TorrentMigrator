@@ -25,7 +25,7 @@ QVariant BasicTorrentItem::data(int column, int role) const
             return m_record.torrent_path;
         case BasicTorrentModel::Col_SavePath:
             return m_record.save_path;
-        case BasicTorrentModel::Col_TorrentState:
+        case BasicTorrentModel::Col_State:
             return m_record.paused ? QObject::tr("Paused") : QObject::tr("Normal");
         default:
             return QVariant();

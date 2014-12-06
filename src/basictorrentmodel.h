@@ -14,6 +14,19 @@ class BasicTorrentModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
+    enum Roles {
+        RecordDataRole,
+    };
+
+    enum Columns {
+        Col_No = 0,
+        Col_Name,
+        Col_TorrentPath,
+        Col_SavePath,
+        Col_State,
+        ColCount,
+    };
+
     explicit BasicTorrentModel(IRecordsAccessor *accessor, QObject *parent = 0);
     virtual ~BasicTorrentModel();
 
@@ -36,6 +49,7 @@ public slots:
 protected:
     bool insertRowsWithoutAddToBackend(int position, const QList<BasicTorrentItem *> rows);
     bool inRange(const QModelIndex &index) const;
+    QVariant dataForColNo(int row, int roel) const;
 
 signals:
 
@@ -45,19 +59,6 @@ private:
     QList<BasicTorrentItem *> items;
 
     friend class BasicTorrentItem;
-
-    enum Roles {
-        RecordDataRole,
-    };
-
-    enum Columns {
-        Col_No = 0,
-        Col_Name,
-        Col_TorrentPath,
-        Col_SavePath,
-        Col_TorrentState,
-        ColCount,
-    };
 };
 
 #endif // ABSTRACTECORDSACCESSOR_H

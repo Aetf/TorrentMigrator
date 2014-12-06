@@ -1,4 +1,5 @@
 #include <QBencodeValue>
+#include <QSize>
 #include "basictorrentmodel.h"
 #include "basictorrentitem.h"
 
@@ -29,11 +30,23 @@ QVariant BasicTorrentModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (role == Qt::DisplayRole && index.column() == Col_No) {
-        return index.row() + 1;
+    if (index.column() == Col_No) {
+        return dataForColNo(index.row(), role);
     }
 
     return items[index.row()]->data(index.column(), role);
+}
+
+QVariant BasicTorrentModel::dataForColNo(int row, int role) const
+{
+    switch (role) {
+    case Qt::TextAlignmentRole:
+        return Qt::AlignCenter;
+    case Qt::DisplayRole:
+        return row + 1;
+    default:
+        return QVariant();
+    }
 }
 
 QVariant BasicTorrentModel::headerData(int section, Qt::Orientation orientation,
