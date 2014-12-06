@@ -29,8 +29,8 @@ QVariant BasicTorrentModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (index.column() == Col_No) {
-        return index.row();
+    if (role == Qt::DisplayRole && index.column() == Col_No) {
+        return index.row() + 1;
     }
 
     return items[index.row()]->data(index.column(), role);
