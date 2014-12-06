@@ -103,9 +103,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>okBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>uTorrentConfPanel</receiver>
+   <slot>okBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>319</x>
+     <y>86</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>270</x>
+     <y>87</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>browseAppdata()</slot>
   <slot>browseExtraTorrents()</slot>
+  <slot>okBtnClicked()</slot>
  </slots>
 </ui>

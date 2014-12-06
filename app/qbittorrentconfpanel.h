@@ -7,6 +7,8 @@ namespace Ui {
 class qBittorrentConfPanel;
 }
 
+class IRecordsAccessor;
+
 class qBittorrentConfPanel : public QWidget
 {
     Q_OBJECT
@@ -14,6 +16,18 @@ class qBittorrentConfPanel : public QWidget
 public:
     explicit qBittorrentConfPanel(QWidget *parent = 0);
     ~qBittorrentConfPanel();
+
+    IRecordsAccessor *getConfigedAccessor() const;
+
+signals:
+    void accept(IRecordsAccessor*);
+
+public slots:
+    void browseConfigDir();
+    void browseBackupDir();
+
+protected slots:
+    void okBtnClicked();
 
 private:
     Ui::qBittorrentConfPanel *ui;

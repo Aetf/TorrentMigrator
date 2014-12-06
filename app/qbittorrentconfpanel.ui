@@ -103,9 +103,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>okBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>qBittorrentConfPanel</receiver>
+   <slot>okBtnClicked()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>278</x>
+     <y>87</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>195</x>
+     <y>95</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>browseConfigDir()</slot>
   <slot>browseBackupDir()</slot>
+  <slot>okBtnClicked()</slot>
  </slots>
 </ui>

@@ -2,7 +2,7 @@
 #include "basictorrentmodel.h"
 
 BasicTorrentItem::BasicTorrentItem(BasicTorrentModel *model, const TorrentRecord &record)
-    : model(model), record(record), isNull(true)
+    : m_model(model), m_record(record), isNull(true)
 {
 }
 
@@ -14,19 +14,19 @@ BasicTorrentItem::~BasicTorrentItem()
 QVariant BasicTorrentItem::data(int column, int role) const
 {
     if (role == Qt::UserRole + 1) {
-        return QVariant::fromValue(record);
+        return QVariant::fromValue(m_record);
     }
 
     if (role == Qt::DisplayRole) {
         switch (column) {
         case BasicTorrentModel::Col_Name:
-            return record.name;
+            return m_record.name;
         case BasicTorrentModel::Col_TorrentPath:
-            return record.torrent_path;
+            return m_record.torrent_path;
         case BasicTorrentModel::Col_SavePath:
-            return record.save_path;
+            return m_record.save_path;
         case BasicTorrentModel::Col_TorrentState:
-            return record.paused ? QObject::tr("Paused") : QObject::tr("Normal");
+            return m_record.paused ? QObject::tr("Paused") : QObject::tr("Normal");
         default:
             return QVariant();
         }
@@ -39,17 +39,17 @@ bool BasicTorrentItem::setData(const QVariant &value, int role)
 {
     if (role == Qt::UserRole + 1) {
         auto rec = value.value<TorrentRecord>();
-        bool hashChanged = (record.info_hash == rec.info_hash);
+        bool hashChanged = (m_record.info_hash == rec.info_hash);
         bool ok = true;
 
         if (isNull || hashChanged) {
-            ok = model->accessor->add(record);
+            ok = m_model->accessor->add(m_record);
         } else {
-            ok = model->accessor->update(record);
+            ok = m_model->accessor->update(m_record);
         }
         if (!ok) { return false; }
 
-        record = rec;
+        m_record = rec;
         isNull = false;
         return true;
     }

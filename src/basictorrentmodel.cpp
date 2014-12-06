@@ -71,39 +71,26 @@ int BasicTorrentModel::columnCount(const QModelIndex &parent) const
     return ColCount;
 }
 
-bool BasicTorrentModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool BasicTorrentModel::insertRowsWithoutAddToBackend(int position, const QList<BasicTorrentItem *> rows)
 {
-    if (!inRange(index)) {
-        return false;
-    }
-
-    if (!items[index.row()]->setData(value, role)) { return false; }
-    emit dataChanged(index, index);
-    return true;
-}
-
-bool BasicTorrentModel::insertRows(int row, int count, const QModelIndex &parent)
-{
-    if (parent.isValid()) {
-        return false;
-    }
-
-    beginInsertRows(parent, row, row + count - 1);
-    while (count--) {
-        items.insert(row, new BasicTorrentItem(this));
-    }
-    endInsertRows();
-    return true;
-}
-
-bool BasicTorrentModel::insertRows(int position, const QList<BasicTorrentItem *> rows)
-{
-    beginInsertRows(QModelIndex(), position, position + rows.size() - 1);
+    QModelIndex idx;
+    beginInsertRows(idx, position, position + rows.size() - 1);
     for (auto row : rows) {
         items.insert(position, row);
     }
     endInsertRows();
     return true;
+}
+
+bool BasicTorrentModel::insertRecord(int position, const TorrentRecord &record)
+{
+    if (!accessor->add(record)) {
+        qDebug() << "Underlying backend insertion failed.";
+        return false;
+    }
+    QList<BasicTorrentItem *> rowsToInsert;
+    rowsToInsert << new BasicTorrentItem(this, record);
+    return insertRowsWithoutAddToBackend(position, rowsToInsert);
 }
 
 bool BasicTorrentModel::removeRows(int row, int count, const QModelIndex &parent)
@@ -146,5 +133,5 @@ bool BasicTorrentModel::pullData()
     for (auto record : records) {
         rowsToInsert << new BasicTorrentItem(this, record);
     }
-    return insertRows(0, rowsToInsert);
+    return insertRowsWithoutAddToBackend(0, rowsToInsert);
 }

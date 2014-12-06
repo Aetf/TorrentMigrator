@@ -7,6 +7,8 @@ namespace Ui {
 class uTorrentConfPanel;
 }
 
+class IRecordsAccessor;
+
 class uTorrentConfPanel : public QWidget
 {
     Q_OBJECT
@@ -14,6 +16,18 @@ class uTorrentConfPanel : public QWidget
 public:
     explicit uTorrentConfPanel(QWidget *parent = 0);
     ~uTorrentConfPanel();
+
+    IRecordsAccessor *getConfigedAccessor() const;
+
+signals:
+    void accept(IRecordsAccessor*);
+
+public slots:
+    void browseAppdata();
+    void browseExtraTorrents();
+
+private slots:
+    void okBtnClicked();
 
 private:
     Ui::uTorrentConfPanel *ui;

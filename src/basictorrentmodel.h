@@ -26,17 +26,15 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    virtual bool setData(const QModelIndex &index, const QVariant &value,
-                         int role = Qt::DisplayRole);
-    virtual bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
+    bool insertRecord(int position, const TorrentRecord &record);
 public slots:
     bool pullData();
     void clear();
 
 protected:
-    bool insertRows(int position, const QList<BasicTorrentItem *> rows);
+    bool insertRowsWithoutAddToBackend(int position, const QList<BasicTorrentItem *> rows);
     bool inRange(const QModelIndex &index) const;
 
 signals:
