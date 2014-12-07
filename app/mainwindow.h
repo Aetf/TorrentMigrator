@@ -23,13 +23,15 @@ protected slots:
     void prepareAndShowRightConfigPanel(const QString &backend);
     void prepareAndShowConfigPanel(const QString &backend, int which);
     void acceptConfig(int id, IRecordsAccessor *accessor);
+    void btnTransferToRight();
+    void btnTransferToLeft();
 
 private:
     void clearStackedWidget(QStackedWidget *widget);
     void hideConfig(int which);
     void showConfig(int which);
 
-    void configHeaderViewFor(QTableView *view);
+    void configureViewFor(QTableView *view);
 
 private:
     Ui::MainWindow *ui;

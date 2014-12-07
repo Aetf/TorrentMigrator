@@ -1,6 +1,8 @@
 #include <QDebug>
 #include <QPropertyAnimation>
 #include <QStackedWidget>
+#include <QStandardItem>
+#include <QStandardItemModel>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "qbittorrentconfpanel.h"
@@ -12,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+//    ui->middleWidget->hide();
     backendConfs[0] = ui->backendConfLeft;
     backendConfs[1] = ui->backendConfRight;
     torrentViews[0] = ui->torrentViewLeft;
@@ -21,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
         hideConfig(i);
         clearStackedWidget(backendConfs[i]);
     }
+
+//    auto transfermorModel = new QStandardItemModel(ui->transfermorList);
 }
 
 MainWindow::~MainWindow()
@@ -73,7 +78,7 @@ void MainWindow::acceptConfig(int id, IRecordsAccessor *accessor)
     torrentViews[id]->setModel(new BasicTorrentModel(accessor, this));
     if (old) { delete old; }
 
-    configHeaderViewFor(torrentViews[id]);
+    configureViewFor(torrentViews[id]);
 }
 
 void MainWindow::hideConfig(int which)
@@ -93,11 +98,27 @@ void MainWindow::showConfig(int which)
     //    backendConf[which]->setMaximumHeight(QWIDGETSIZE_MAX);
 }
 
-void MainWindow::configHeaderViewFor(QTableView *view)
+void MainWindow::configureViewFor(QTableView *view)
 {
     view->horizontalHeader()->setSectionResizeMode(BasicTorrentModel::Col_No,
                                                    QHeaderView::ResizeToContents);
     view->horizontalHeader()->setSectionResizeMode(BasicTorrentModel::Col_State,
                                                    QHeaderView::ResizeToContents);
     view->horizontalHeader()->setSectionsMovable(true);
+//    view->resizeColumnsToContents();
+    view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    view->setSelectionMode(QAbstractItemView::ExtendedSelection);
+}
+
+void MainWindow::btnTransferToRight()
+{
+    auto model = torrentViews[1]->model();
+    if (!model) { return; }
+
+    // TODO: transfer
+}
+
+void MainWindow::btnTransferToLeft()
+{
+
 }
