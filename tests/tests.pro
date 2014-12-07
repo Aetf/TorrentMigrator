@@ -5,8 +5,8 @@ CONFIG += console
 CONFIG -= app_bundle
 
 # Link to library to be tested
-LIBS += -L../src -ltorrentBackends
-LIBS += -L/home/aetf/lib -lQBencode
+LIBS   += -L../src -ltorrentBackends
+LIBS   += -lQBencode
 
 # Include gtest headers as a system header to avoid compiler warnings in it.
 QMAKE_INCDIR += gtest

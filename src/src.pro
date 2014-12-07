@@ -6,8 +6,7 @@ QT       -= gui
 TARGET   =  torrentBackends
 CONFIG   -= app_bundle
 CONFIG   += staticlib
-
-LIBS     += -L/home/aetf/lib -lQBencode
+LIBS     += -lQBencode
 
 SOURCES  += \
     torrentrecord.cpp \
