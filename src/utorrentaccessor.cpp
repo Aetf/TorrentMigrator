@@ -19,6 +19,13 @@ uTorrentAccessor::~uTorrentAccessor()
 
 }
 
+/*!
+ * \brief setup
+ * \param args
+ *     "appdata" => path to appdata dir
+ *     "extratorrent" => path to extratorrent dir
+ * \return
+ */
 bool uTorrentAccessor::setup(QVariantHash args)
 {
     appdataPath = args["appdata"].toString();

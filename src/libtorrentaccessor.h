@@ -14,6 +14,13 @@ public:
     LibtorrentAccessor();
     ~LibtorrentAccessor();
 
+    /*!
+     * \brief setup
+     * \param args
+     *     "configDir" => path to config dir
+     *     "backupDir" => path to backup dir
+     * \return
+     */
     virtual bool setup(QVariantHash args);
     virtual bool readAll(QList<TorrentRecord> &list);
     virtual bool writeAll(QList<TorrentRecord> &records);

@@ -18,6 +18,13 @@ LibtorrentAccessor::~LibtorrentAccessor()
 
 }
 
+/*!
+ * \brief setup
+ * \param args
+ *     "configDir" => path to config dir
+ *     "backupDir" => path to backup dir
+ * \return
+ */
 bool LibtorrentAccessor::setup(QVariantHash args)
 {
     configDir = args["configDir"].toString();
