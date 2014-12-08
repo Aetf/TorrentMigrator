@@ -8,7 +8,7 @@ CONFIG   -= app_bundle
 
 PRE_TARGETDEPS += ../src/libtorrentBackends.a
 LIBS     += -L../src -ltorrentBackends
-LIBS     += -lQBencode
+LIBS     += -lQBencode -lPocoFoundation
 
 SOURCES  += \
     main.cpp \
