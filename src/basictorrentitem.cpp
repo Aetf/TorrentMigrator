@@ -13,7 +13,8 @@ BasicTorrentItem::~BasicTorrentItem()
 
 QVariant BasicTorrentItem::data(int column, int role) const
 {
-    if (role == Qt::UserRole + 1) {
+    if (role == BasicTorrentModel::RecordDataRole) {
+        qDebug() << "Return record data";
         return QVariant::fromValue(m_record);
     }
 

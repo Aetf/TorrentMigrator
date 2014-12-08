@@ -46,7 +46,7 @@ bool DeviceMapTransformer::setup(QString args)
 bool DeviceMapTransformer::setup(QVariantHash args)
 {
     for (auto key : args.keys()) {
-        if (!QRegExp(R"([a-zA-Z]:[/\]?)").exactMatch(key)) { continue; }
+        if (!QRegExp(R"([a-zA-Z]:[/\\]?)").exactMatch(key)) { continue; }
         if (!args[key].canConvert<QString>()) { continue; }
 
         auto lowerKey = Utils::normalizeSeperator(key.toLower());
@@ -68,7 +68,7 @@ TorrentRecord DeviceMapTransformer::transform(const TorrentRecord &input) const
     auto result = input;
     for (auto key : devicesMap.keys()) {
         if (result.save_path.startsWith(key, Qt::CaseInsensitive)) {
-            result.save_path.replace(key, devicesMap[key]);
+            result.save_path.replace(key, devicesMap[key], Qt::CaseInsensitive);
             break;
         }
     }

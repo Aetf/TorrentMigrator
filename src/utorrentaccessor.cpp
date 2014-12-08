@@ -144,7 +144,7 @@ bool uTorrentAccessor::readAll(QList<TorrentRecord> &list)
 
         TorrentRecord record;
         record.info_hash = uTorrentRecord["info"].toByteArray().toHex();
-        record.save_path = uTorrentRecord["path"].toString();
+        record.save_path = Utils::normalizeSeperator(uTorrentRecord["path"].toString());
         record.name = uTorrentRecord["caption"].toString();
 
         // storage info

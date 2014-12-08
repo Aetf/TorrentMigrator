@@ -30,11 +30,17 @@ QVariant BasicTorrentModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (index.column() == Col_No) {
-        return dataForColNo(index.row(), role);
+    // use per item data first
+    auto res = items[index.row()]->data(index.column(), role);
+
+    // fallback to model data
+    if (!res.isValid()) {
+        if (index.column() == Col_No) {
+            res = dataForColNo(index.row(), role);
+        }
     }
 
-    return items[index.row()]->data(index.column(), role);
+    return res;
 }
 
 QVariant BasicTorrentModel::dataForColNo(int row, int role) const
@@ -104,6 +110,7 @@ bool BasicTorrentModel::insertRecord(int position, const TorrentRecord &record)
     }
     QList<BasicTorrentItem *> rowsToInsert;
     rowsToInsert << new BasicTorrentItem(this, record);
+    position = position == -1 ? items.size() : position;
     return insertRowsWithoutAddToBackend(position, rowsToInsert);
 }
 

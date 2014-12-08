@@ -8,6 +8,7 @@
 #include "qbittorrentconfpanel.h"
 #include "utorrentconfpanel.h"
 #include "basictorrentmodel.h"
+#include "devicemaptransformer.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -112,10 +113,22 @@ void MainWindow::configureViewFor(QTableView *view)
 
 void MainWindow::btnTransferToRight()
 {
-    auto model = torrentViews[1]->model();
-    if (!model) { return; }
+    auto targetModel = qobject_cast<BasicTorrentModel*>(torrentViews[1]->model());
+    auto sourceModel = torrentViews[0]->model();
+    if (!targetModel || !sourceModel) { return; }
 
-    // TODO: transfer
+    auto transformer = new DeviceMapTransformer();
+    transformer->setup("I:/ => /media/AetfのHD\n"
+                       "F:/ => /media/Documents");
+
+    for(auto idx : torrentViews[0]->selectionModel()->selectedRows()) {
+        qDebug() << "Selected row:" << idx.row();
+        auto record = sourceModel->data(idx, BasicTorrentModel::RecordDataRole).value<TorrentRecord>();
+        qDebug() << "Processing record:" << record.name << "with save_path" << record.save_path;
+        record = transformer->transform(record);
+        qDebug() << "After transform:" << record.name << "with save_path" << record.save_path;
+        targetModel->insertRecord(-1, record);
+    }
 }
 
 void MainWindow::btnTransferToLeft()

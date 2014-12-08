@@ -6,6 +6,7 @@
 #include <QSettings>
 #include "libtorrentaccessor.h"
 #include "simpletorrentinfo.h"
+#include "utils.h"
 
 LibtorrentAccessor::LibtorrentAccessor()
     : ready(false)
@@ -55,7 +56,7 @@ bool LibtorrentAccessor::readAll(QList<TorrentRecord> &list)
 
         TorrentRecord record;
         record.info_hash = hash;
-        record.save_path = getSavePath(hash);
+        record.save_path = Utils::normalizeSeperator(getSavePath(hash));
         record.torrent_path = pair.second;
         record.name = ti.name();
 
@@ -112,7 +113,7 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
 {
     if (!ready) { return false; }
 
-    // skip already known torrent
+    // TODO: skip already known torrent
 
 
     // step 1. generate fastresume file
@@ -152,6 +153,8 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
     if (!saveResumeData(record.info_hash, resumeData)) {
         qDebug() << "save resume data failed for torrent ("
                  << record.info_hash << "," << record.name << ")";
+        // remove any already created data
+        remove(record.info_hash);
         return false;
     }
 
@@ -170,16 +173,20 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
     if (!insertConfRecord(record.info_hash, confDict)) {
         qDebug() << "adding resume.conf record failed for torrent ("
                  << record.info_hash << "," << record.name << ")";
+        // remove any already created data
+        remove(record.info_hash);
         return false;
     }
 
     // step 3. copy torrent file
-    auto targetPath = QDir(getTorrentFilePath(record.info_hash)).canonicalPath();
+    auto targetPath = getTorrentFilePath(record.info_hash);
     auto currentFile = QDir(record.torrent_path).canonicalPath();
     if (targetPath != currentFile) {
         if (!QFile::copy(currentFile, targetPath)) {
             qDebug() << "copy torrent from" << currentFile
                      << "to" << targetPath << "failed";
+            // remove any already created data
+            remove(record.info_hash);
             return false;
         }
     }
@@ -199,21 +206,23 @@ bool LibtorrentAccessor::remove(const QString &hash)
 {
     if (!ready) { return false; }
 
+    bool succeed = true;
+
     // step 1. remove fastresume data
     QFile fastresume(backupDir + "/" + hash + ".fastresume");
     if (!fastresume.remove()) {
         qDebug() << "remove" << fastresume.fileName() << "failed";
-        return false;
+        succeed = false;
     }
     // step 2. remove torrent file
     QFile torrentfile(getTorrentFilePath(hash));
     if (!torrentfile.remove()) {
         qDebug() << "remove" << torrentfile.fileName() << "failed";
-        return false;
+        succeed = false;
     }
     // step 3. remove config record
     deleteConfRecord(hash);
-    return true;
+    return succeed;
 }
 
 QVariantHash LibtorrentAccessor::initializeConfig(const QString &/*hash*/)
@@ -474,7 +483,7 @@ QVariant LibtorrentAccessor::getResumeValue(const QString &hash, const QString &
 
 QString LibtorrentAccessor::getTorrentFilePath(const QString &hash) const
 {
-    return QDir::cleanPath(backupDir + "/" + hash + ".torrent");
+    return QDir(backupDir).absoluteFilePath(hash + ".torrent");
 }
 
 std::pair<SimpleTorrentInfo, QString> LibtorrentAccessor::locateTorrentFile(
