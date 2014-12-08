@@ -113,8 +113,11 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
 {
     if (!ready) { return false; }
 
-    // TODO: skip already known torrent
-
+    // skip already known torrent
+    if (knownTorrent(record.info_hash)) {
+        qDebug() << "Skiping known torrent" << record.name << "(" << record.info_hash << ")";
+        return false;
+    }
 
     // step 1. generate fastresume file
     auto resumeData = initializeFastResume(record.info_hash);
