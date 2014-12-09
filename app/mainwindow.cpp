@@ -119,7 +119,8 @@ void MainWindow::btnTransferToRight()
 
     auto transformer = new DeviceMapTransformer();
     transformer->setup("I:/ => /media/AetfのHD\n"
-                       "F:/ => /media/Documents");
+                       "F:/ => /media/Documents\n"
+                       "D:/ => /media/Softwares");
 
     for(auto idx : torrentViews[0]->selectionModel()->selectedRows()) {
         qDebug() << "Selected row:" << idx.row();
