@@ -3,13 +3,12 @@
 #include <QString>
 #include "utils.h"
 
-bool Utils::extendBitmap(QByteArray &result, const QByteArray &bitmap, int bitsCount)
+bool Utils::extendBitmap(QByteArray &result, const QByteArray &bitmap)
 {
     result.clear();
-    result.reserve(bitsCount);
+    result.reserve(bitmap.size() * 8);
     for (int i = 0; i != bitmap.size(); i++)
         for (int b = 0; b != 8; b++) {
-            if (result.size() == bitsCount) { break; }
             if (bitmap.at(i) & (1 << (7 - b))) {
                 result.append((char)1);
             } else {
@@ -17,7 +16,7 @@ bool Utils::extendBitmap(QByteArray &result, const QByteArray &bitmap, int bitsC
             }
         }
 
-    return result.size() == bitsCount;
+    return true;
 }
 
 int Utils::dictFindInt(const QBencodeDict &dict, const QString &key, int defaultVal)

@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFile>
 #include <Poco/Path.h>
+#include <cassert>
 #include "simpletorrentinfo.h"
 #include "utorrentaccessor.h"
 #include "utils.h"
@@ -162,7 +163,7 @@ bool uTorrentAccessor::readAll(QList<TorrentRecord> &list)
         record.active_time = Utils::dictFindInt(uTorrentRecord, "runtime", 0);
         record.seeding_time = Utils::dictFindInt(uTorrentRecord, "seedtime", 0);
         record.added_time = Utils::dictFindInt(uTorrentRecord, "added_on", 0);
-        record.complete_time = Utils::dictFindInt(uTorrentRecord, "complete_on", 0);
+        record.complete_time = Utils::dictFindInt(uTorrentRecord, "completed_on", 0);
         record.last_active = Utils::dictFindInt(uTorrentRecord, "last_active", 0);
         record.last_seen_complete = Utils::dictFindInt(uTorrentRecord, "last seen complete", 0);
 
@@ -231,11 +232,22 @@ bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record,
 
     // convert pieces bitmap
     auto bitmap = uTorrentRecord["have"].toByteArray();
-    if (!Utils::extendBitmap(record.pieces_we_have, bitmap, record.piece_count)) {
-        qDebug() << "bitmap not complete for torrent"
-                 << key << "with bitmap" << bitmap.toHex();
-        return false;
-    }
+    QByteArray bitArray;
+    Utils::extendBitmap(bitArray, bitmap);
+    // trim paddings
+    // TODO: uTorrent: determin the order of bits in the last byte in bitmap
+    // example:
+    // Byte in map:    0    7
+    // Bits:        0000 0111
+    //                    ^^^
+    // Order1:            321
+    // Order2:            123 (now use this one for simplicity)
+    int quotient = record.piece_count / 8;
+    int reminder = record.piece_count % 8;
+    record.pieces_we_have.clear();
+    record.pieces_we_have.append(bitArray.left(quotient * 8));
+    record.pieces_we_have.append(bitArray.right(reminder));
+    assert((quint64)record.pieces_we_have.size() == record.piece_count);
 
     // files
     record.files.clear();
@@ -251,6 +263,9 @@ bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record,
         FileInfo fi;
         fi.size = ti.fileSizes()[i];
         fi.mtime = ti.fileMTimes()[i];
+        if (fi.mtime == 0) {
+            fi.mtime = uTorrentRecord["modtimes"].toList()[i].toInteger();
+        }
         fi.priority = priorityArray.at(i);
 
         record.files.append(fi);

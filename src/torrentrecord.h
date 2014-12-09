@@ -58,7 +58,8 @@ struct TorrentRecord
     QStringList labels;
 
     enum CONSTANTS {
-        MAX_CONNECTIONS_NO = -1
+        MAX_CONNECTIONS_NO = -1,
+        MAX_RATIO_LIMIT = 1500,
     };
 };
 Q_DECLARE_METATYPE(TorrentRecord)

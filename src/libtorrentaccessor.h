@@ -41,6 +41,7 @@ private:
 
     enum CONSTANTS {
         MAX_CONNECTION_NO = (1 << 24) - 1,
+        MAX_UPLOADS_NO = (1 << 24) - 1,
     };
 
     QStringList recordHashs();
@@ -53,6 +54,7 @@ private:
     // write back fastresume
     void writeFileInfos(QBencodeDict &resumeData, const TorrentRecord &record);
     void writeMaxConnections(QBencodeDict &resumeData, const TorrentRecord &record);
+    void writeRatioLimit(QBencodeDict &resumeData, const TorrentRecord &record);
     void writeTrackers(QBencodeDict &resumeData, const TorrentRecord &record);
     void writeLabels(QBencodeDict &resumeData, const TorrentRecord &record);
 

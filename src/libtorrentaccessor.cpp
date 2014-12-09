@@ -71,7 +71,7 @@ bool LibtorrentAccessor::readAll(QList<TorrentRecord> &list)
         record.seeding_time = getResumeValue(hash, "seeding_time").toULongLong();
         record.added_time = getAddedDate(hash).toTime_t();
         //        record.added_time = getResumeValue(hash, "added_time").toULongLong();
-        record.complete_time = getResumeValue(hash, "complete_time").toULongLong();
+        record.complete_time = getResumeValue(hash, "completed_time").toULongLong();
         fillLastActive(record, hash);
         record.last_seen_complete = getResumeValue(hash, "last_seen_complete").toULongLong();
 
@@ -127,7 +127,7 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
     writeFileInfos(resumeData, record);
     writeMaxConnections(resumeData, record);
     // FUTURE: libtorrent: support unfinished torrents
-    resumeData["num_icomplete"] = 0; // 1 for unfinished torrents
+    resumeData["num_incomplete"] = 0; // 1 for unfinished torrents
     resumeData["seed_mode"] = record.seed_mode;
     resumeData["qBt-seedStatus"] = record.seed_mode;
     resumeData["super-seeding"] = record.super_seeding;
@@ -141,7 +141,7 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
     auto current = QDateTime::currentDateTime().toTime_t();
     resumeData["active_time"] = record.active_time;
     resumeData["added_time"] = record.added_time;
-    resumeData["complete_time"] = record.complete_time;
+    resumeData["completed_time"] = record.complete_time;
     resumeData["finished_time"] = current - record.complete_time;
     resumeData["last_download"] = current - record.last_active;
     resumeData["last_upload"] = current - record.last_active;
@@ -150,6 +150,7 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
 
     resumeData["qBt-savePath"] = record.save_path;
     resumeData["qBt-ratioLimit"] = qint64(record.ratio_limit);
+    writeRatioLimit(resumeData, record);
     resumeData["qBt-seedDate"] = record.complete_time;
     writeLabels(resumeData, record);
 
@@ -169,7 +170,6 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
     confDict["seed"] = true;
     confDict["is_magnet"] = false;
     confDict["save_path"] = record.save_path;
-    confDict["priority"] = 1;
     confDict["has_error"] = false;
     confDict["label"] = resumeData["qBt-label"].toString();
 
@@ -252,7 +252,7 @@ QBencodeDict LibtorrentAccessor::initializeFastResume(const QString &hash)
     dict["num_downloaders"] = 0;
     dict["upload_rate_limit"] = 0;
     dict["doanload_rate_limit"] = 0;
-    dict["max_uploads"] = 0;
+    dict["max_uploads"] = MAX_UPLOADS_NO;
     dict["seed_mode"] = 1;
     dict["auto_managed"] = 1;
     dict["paused"] = 1;
@@ -293,6 +293,15 @@ void LibtorrentAccessor::writeMaxConnections(QBencodeDict &resumeData,
         resumeData["max_connections"] = MAX_CONNECTION_NO;
     } else {
         resumeData["max_connections"] = record.max_connections;
+    }
+}
+
+void LibtorrentAccessor::writeRatioLimit(QBencodeDict &resumeData, const TorrentRecord &record)
+{
+    if (record.ratio_limit == TorrentRecord::MAX_RATIO_LIMIT) {
+        resumeData["qBt-ratioLimit"] = USE_GLOBAL_RATIO;
+    } else {
+        resumeData["qBt-ratioLimit"] = qint64(record.ratio_limit);
     }
 }
 
