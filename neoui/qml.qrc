@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>TorrentsColumn.qml</file>
+        <file>TransferButtonBox.qml</file>
+        <file>FusionButton.qml</file>
+        <file>FlyoutPanel.qml</file>
+        <file>TransferButton.qml</file>
+        <file>uTorrentConfigPanel.qml</file>
+        <file>qBittorrentConfigPanel.qml</file>
+        <file>images/more.png</file>
+    </qresource>
+</RCC>

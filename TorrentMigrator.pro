@@ -5,6 +5,7 @@ CONFIG += ordered
 SUBDIRS = \
     src \
     app \
+    neoui \
     tests
 OTHER_FILES += \
     style.astylerc
