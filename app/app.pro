@@ -5,7 +5,7 @@ QT       += core gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 CONFIG   -= app_bundle
 
-
+# link to libraries
 PRE_TARGETDEPS += ../src/libtorrentBackends.a
 LIBS     += -L../src -ltorrentBackends
 LIBS     += -lQBencode -lPocoFoundation
