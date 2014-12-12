@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import RecordsModel 1.0
 
 Item {
     id: root
@@ -64,7 +65,7 @@ Item {
             Connections {
                 target: panelPlaceHolder.item
                 onAccepted: {
-                    var accessor = panelPlaceHolder.item.getConfigedAccessor();
+                    recordsModel.accessor = panelPlaceHolder.item.getConfigedAccessor();
                     backendConfigPanel.hide();
                 }
             }
@@ -99,7 +100,6 @@ Item {
     }
 
     Item {
-        id: torrentsList
         anchors {
             top: backendConfigPanel.bottom; topMargin: verticalSpacing
             bottom: root.bottom; bottomMargin: verticalSpacing
@@ -107,9 +107,25 @@ Item {
             right: root.right; rightMargin: horizontalSpacing
         }
 
-        Rectangle {
+        TableView {
+            id: torrentsList
             anchors.fill: parent
-            color: Qt.lighter("red")
+
+            Repeater {
+                model: recordsModel.columnRoles()
+
+                TableViewColumn {
+                    role: recordsModel.roleName(modelData)
+                    title: recordsModel.headerData(recordsModel.columnRoleToSection(modelData))
+                    width: 100
+                }
+            }
+
+            model: recordsModel;
+        }
+
+        RecordsModel {
+            id: recordsModel;
         }
     }
 

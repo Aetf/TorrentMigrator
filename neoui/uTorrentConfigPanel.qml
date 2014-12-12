@@ -1,4 +1,5 @@
 import QtQuick 2.3
+import RecordsModel 1.0
 
 BasicConfigPanel {
     id: root
@@ -6,7 +7,7 @@ BasicConfigPanel {
     title: "uTorrent Config Panel"
 
     function getConfigedAccessor() {
-        return {};
+        return RecordsAccessorFactory.createUTorrentAccessor("", "");
     }
 
     Rectangle {
