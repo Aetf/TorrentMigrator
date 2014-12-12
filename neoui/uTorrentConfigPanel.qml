@@ -1,11 +1,15 @@
-import QtQuick 2.0
+import QtQuick 2.3
 
-Rectangle {
+BasicConfigPanel {
     id: root
 
-    color: Qt.lighter("gray")
-    Text {
-        text: "uTorrent Config Panel"
+    title: "uTorrent Config Panel"
+
+    function getConfigedAccessor() {
+        return {};
+    }
+
+    Rectangle {
+        color: Qt.lighter("gray")
     }
 }
-

@@ -9,5 +9,6 @@
         <file>uTorrentConfigPanel.qml</file>
         <file>qBittorrentConfigPanel.qml</file>
         <file>images/more.png</file>
+        <file>BasicConfigPanel.qml</file>
     </qresource>
 </RCC>

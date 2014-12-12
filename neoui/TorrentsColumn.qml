@@ -8,7 +8,7 @@ Item {
     property real verticalSpacing: 5
     property real horizontalSpacing: 0
     property alias title: titleLabel.text
-    property var backendModel: dummyBackendModel
+    property alias backendModel: backendCombo.model
 
     RowLayout {
         id: backendChooser
@@ -23,7 +23,7 @@ Item {
         }
         ComboBox {
             id: backendCombo
-            model: backendModel
+            model: dummyBackendModel
             textRole: "name"
 
             onCurrentIndexChanged: {
@@ -60,12 +60,14 @@ Item {
         Loader {
             id: panelPlaceHolder
             anchors.fill: parent
-        }
 
-        MouseArea {
-            anchors.fill: panelPlaceHolder
-
-            onClicked: backendConfigPanel.hide()
+            Connections {
+                target: panelPlaceHolder.item
+                onAccepted: {
+                    var accessor = panelPlaceHolder.item.getConfigedAccessor();
+                    backendConfigPanel.hide();
+                }
+            }
         }
 
         state: "collapsed"
