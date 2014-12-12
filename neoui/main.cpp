@@ -12,8 +12,9 @@ int main(int argc, char *argv[])
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
 
     // get ApplicationWindow object and center it
-    auto *topLevel = engine.rootObjects().first();
-    QQuickWindow *window = qobject_cast<QQuickWindow *>(topLevel);
+    Q_ASSERT(!engine.rootObjects().isEmpty());
+    auto * const window = qobject_cast<QQuickWindow*>(engine.rootObjects().front());
+    Q_ASSERT(window);
     window->setGeometry(QStyle::alignedRect(Qt::LeftToRight, Qt::AlignCenter, window->size(),
                                             qApp->desktop()->availableGeometry()));
     return app.exec();
