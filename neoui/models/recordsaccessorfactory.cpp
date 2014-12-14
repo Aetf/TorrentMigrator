@@ -19,7 +19,7 @@ RecordsAccessorObject *RecordsAccessorFactory::createUTorrentAccessor(
 RecordsAccessorObject *RecordsAccessorFactory::createLibTorrentAccessor(
     const QString &configDir, const QString &backupDir)
 {
-    auto ira = new uTorrentAccessor;
+    auto ira = new LibtorrentAccessor;
     QVariantHash args;
     args["configDir"] = configDir;
     args["backupDir"] = backupDir;
