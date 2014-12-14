@@ -17,6 +17,11 @@ public:
 
     void set(IRecordsAccessor *accessor) { m_accessor = accessor; }
     IRecordsAccessor *get() const { return m_accessor; }
+    IRecordsAccessor *take() {
+        auto accessor = m_accessor;
+        m_accessor = nullptr;
+        return accessor;
+    }
 private:
     IRecordsAccessor *m_accessor;
 };

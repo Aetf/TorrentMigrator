@@ -26,8 +26,8 @@ void RecordsModel::setAccessor(RecordsAccessorObject *accessor)
         auto oldModel = sourceModel();
         setSourceModel(nullptr);
         delete oldModel;
-        if (m_accessor) {
-            setSourceModel(new BasicTorrentModel(m_accessor->get(), this));
+        if (m_accessor && m_accessor->get()) {
+            setSourceModel(new BasicTorrentModel(m_accessor->take(), this));
         }
 
         emit accessorChanged();
