@@ -6,6 +6,24 @@
 
 class RecordsAccessorObject;
 
+class ColumnRoles : public QObject
+{
+    Q_OBJECT
+    Q_ENUMS(Roles)
+    Q_ENUMS(ColumnCount)
+public:
+    enum Roles {
+        IndexRole = Qt::UserRole + BasicTorrentModel::Col_No,
+        NameRole = Qt::UserRole + BasicTorrentModel::Col_Name,
+        TorrentPathRole = Qt::UserRole + BasicTorrentModel::Col_TorrentPath,
+        SavePathRole = Qt::UserRole + BasicTorrentModel::Col_SavePath,
+        State = Qt::UserRole + BasicTorrentModel::Col_State,
+    };
+    enum ColumnCount {
+        ColumnCount = BasicTorrentModel::ColCount
+    };
+};
+
 class RecordsModel : public QIdentityProxyModel
 {
     Q_OBJECT
@@ -30,17 +48,6 @@ public:
                                 int role = Qt::DisplayRole) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     virtual QHash<int, QByteArray> roleNames() const;
-
-    enum ColumnRoles {
-        ColumnNoRole = Qt::UserRole + BasicTorrentModel::Col_No,
-        ColumnNameRole = Qt::UserRole + BasicTorrentModel::Col_Name,
-        ColumnTorrentPathRole = Qt::UserRole + BasicTorrentModel::Col_TorrentPath,
-        ColumnSavePathRole = Qt::UserRole + BasicTorrentModel::Col_SavePath,
-        ColumnState = Qt::UserRole + BasicTorrentModel::Col_State,
-    };
-    enum ColumnCount {
-        ColumnCount = BasicTorrentModel::ColCount
-    };
 
 signals:
     void accessorChanged();

@@ -44,11 +44,11 @@ void RecordsModel::setAccessor(RecordsAccessorObject *accessor)
 QVariant RecordsModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {
-    case ColumnNoRole:
-    case ColumnNameRole:
-    case ColumnTorrentPathRole:
-    case ColumnSavePathRole:
-    case ColumnState:
+    case ColumnRoles::IndexRole:
+    case ColumnRoles::NameRole:
+    case ColumnRoles::TorrentPathRole:
+    case ColumnRoles::SavePathRole:
+    case ColumnRoles::State:
         return QIdentityProxyModel::data(createIndex(index.row(), columnRoleToSection(role)),
                                          Qt::DisplayRole);
     default:
@@ -65,11 +65,11 @@ QVariant RecordsModel::headerData(int section, Qt::Orientation orientation,
 QList<int> RecordsModel::columnRoles() const
 {
     QList<int> list;
-    list << ColumnNoRole
-         << ColumnNameRole
-         << ColumnTorrentPathRole
-         << ColumnSavePathRole
-         << ColumnState;
+    list << ColumnRoles::IndexRole
+         << ColumnRoles::NameRole
+         << ColumnRoles::TorrentPathRole
+         << ColumnRoles::SavePathRole
+         << ColumnRoles::State;
     return list;
 }
 
@@ -81,11 +81,11 @@ QByteArray RecordsModel::roleName(int role) const
 int RecordsModel::columnRoleToSection(int role) const
 {
     switch (role) {
-    case ColumnNoRole:
-    case ColumnNameRole:
-    case ColumnTorrentPathRole:
-    case ColumnSavePathRole:
-    case ColumnState:
+    case ColumnRoles::IndexRole:
+    case ColumnRoles::NameRole:
+    case ColumnRoles::TorrentPathRole:
+    case ColumnRoles::SavePathRole:
+    case ColumnRoles::State:
         return role - Qt::UserRole;
     default:
         return 0;
@@ -95,10 +95,10 @@ int RecordsModel::columnRoleToSection(int role) const
 QHash<int, QByteArray> RecordsModel::roleNames() const
 {
     auto names = QIdentityProxyModel::roleNames();
-    names[ColumnNoRole] = "columnNo";
-    names[ColumnNameRole] = "columnName";
-    names[ColumnTorrentPathRole] = "columnTorrentPath";
-    names[ColumnSavePathRole] = "columnSavePath";
-    names[ColumnState] = "columnState";
+    names[ColumnRoles::IndexRole] = "index";
+    names[ColumnRoles::NameRole] = "name";
+    names[ColumnRoles::TorrentPathRole] = "torrentPath";
+    names[ColumnRoles::SavePathRole] = "savePath";
+    names[ColumnRoles::State] = "state";
     return names;
 }

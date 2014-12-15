@@ -31,6 +31,7 @@ int main(int argc, char *argv[])
 
 void registerRecordsModel()
 {
+    qmlRegisterUncreatableType<ColumnRoles>("RecordsModel", 1, 0, "ColumnRoles", "Uncreatable object, provide enums only");
     qmlRegisterSingletonType<RecordsAccessorFactory>("RecordsModel", 1, 0, "RecordsAccessorFactory", RecordsAccessorFactory::RecordsAccessorFactoryProvider);
     qmlRegisterType<RecordsModel>("RecordsModel", 1, 0, "RecordsModel");
     qmlRegisterType<RecordsAccessorObject>("RecordsModel", 1, 0, "RecordsAccessorObject");

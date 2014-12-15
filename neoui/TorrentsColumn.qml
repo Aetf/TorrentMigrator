@@ -157,7 +157,7 @@ Item {
 
                     var col = addColumn(headerComponent.createObject(torrentsList,
                                      { "role": roleName, "title": title }));
-                    if (role === RecordsModel.ColumnNoRole) {
+                    if (role === ColumnRoles.IndexRole) {
                         col.width = 25;
                     }
                 }
