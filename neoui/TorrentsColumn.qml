@@ -133,6 +133,11 @@ Item {
             id: torrentsList
             anchors.fill: parent
             model: recordsModel;
+            selectionMode: SelectionMode.MultiSelection
+
+            onModelChanged: {
+                model.modelReset.connect(populateHeaderData);
+            }
 
             function clearAndDestoryColumns() {
                 while (columnCount > 0) {
@@ -150,13 +155,12 @@ Item {
                         section = model.columnRoleToSection(role),
                         title = model.headerData(section);
 
-                    addColumn(headerComponent.createObject(torrentsList,
+                    var col = addColumn(headerComponent.createObject(torrentsList,
                                      { "role": roleName, "title": title }));
+                    if (role === RecordsModel.ColumnNoRole) {
+                        col.width = 25;
+                    }
                 }
-            }
-
-            onModelChanged: {
-                model.modelReset.connect(populateHeaderData);
             }
         }
 
