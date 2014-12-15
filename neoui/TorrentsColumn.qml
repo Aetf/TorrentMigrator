@@ -77,21 +77,23 @@ Item {
                 name: "collapsed"
                 PropertyChanges {
                     target: backendConfigPanel
-                    implicitHeight: 0
+//                    implicitHeight: 0
+                    height: 0
                 }
             },
             State {
                 name: "expanded"
                 PropertyChanges {
                     target: backendConfigPanel
-                    implicitHeight: 70
+//                    implicitHeight: 70
+                    height: panelPlaceHolder.implicitHeight
                 }
             }
         ]
         transitions: [
             Transition {
                 NumberAnimation {
-                    property: "implicitHeight"
+                    property: "height"
                     duration: 200
                     easing.type: Easing.InOutQuart
                 }
@@ -116,7 +118,7 @@ Item {
                 while (columnCount > 0) {
                     var column = getColumn(0);
                     removeColumn(0);
-                    column.destory();
+                    column.destroy();
                 }
             }
 
@@ -136,7 +138,6 @@ Item {
             onModelChanged: {
                 model.modelReset.connect(populateHeaderData);
             }
-
         }
 
         Component {
