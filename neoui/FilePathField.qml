@@ -1,33 +1,27 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Layouts 1.1
 import RecordsModel 1.0
 
-Item {
+RowLayout {
     id: root
-    implicitHeight: inner.implicitHeight
-    implicitWidth: inner.implicitWidth
+    spacing: 5
 
-    property alias label: label.text
     property alias browseButtonText: browseBtn.text
     property alias path: pathField.text
 
-    Row {
-        id: inner
-        anchors.fill: parent
+    TextField {
+        id: pathField
+        Layout.fillWidth: true
+    }
 
-        Text {
-            id: label
-        }
-        TextField {
-            id: pathField
-        }
-        Button {
-            id: browseBtn
-            text: "Browse..."
+    Button {
+        id: browseBtn
+        Layout.maximumWidth: implicitWidth
+        text: "Browse..."
 
-            onClicked: {
-                root.path = DialogHelper.getExistingDirectory("Choose Directory", root.path);
-            }
+        onClicked: {
+            root.path = DialogHelper.getExistingDirectory("Choose Directory", root.path);
         }
     }
 }

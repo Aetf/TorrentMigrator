@@ -33,6 +33,16 @@ Item {
                 }
             }
         }
+        Button {
+            id: backendConfigButton
+            checkable: true
+            checked: backendConfigPanel.expanded
+            text: qsTr("Show Configure")
+            onClicked: {
+                backendConfigPanel.toggle();
+            }
+
+        }
     }
 
     Item {
@@ -45,9 +55,19 @@ Item {
         clip: true
 
         property alias source: panelPlaceHolder.source
+        property bool expanded: false
+
+        onExpandedChanged: {
+            backendConfigButton.checked = expanded;
+        }
+
+        function toggle() {
+            if (expanded) hide();
+            else show();
+        }
 
         function show(src) {
-            if (typeof src !== undefined) {
+            if (src) {
                 backendConfigPanel.source = src;
             }
 
@@ -77,16 +97,16 @@ Item {
                 name: "collapsed"
                 PropertyChanges {
                     target: backendConfigPanel
-//                    implicitHeight: 0
                     height: 0
+                    expanded: false
                 }
             },
             State {
                 name: "expanded"
                 PropertyChanges {
                     target: backendConfigPanel
-//                    implicitHeight: 70
                     height: panelPlaceHolder.implicitHeight
+                    expanded: true
                 }
             }
         ]

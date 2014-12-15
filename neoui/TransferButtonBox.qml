@@ -18,7 +18,7 @@ ColumnLayout {
         briefWidth: root.buttonWidth
         detailWidth: settingsButtonBox.fullWidth()
         briefText: ">"
-        detailText: "Transfer To Right >"
+        detailText: qsTr("Transfer To Right >")
         animationDuration: root.animationDuration
         easingType: root.easingType
     }
@@ -177,7 +177,7 @@ ColumnLayout {
         briefWidth: root.buttonWidth
         detailWidth: settingsButtonBox.fullWidth()
         briefText: "<"
-        detailText: "< Transfer To Left"
+        detailText: qsTr("< Transfer To Left")
         animationDuration: root.animationDuration
         easingType: root.easingType
     }

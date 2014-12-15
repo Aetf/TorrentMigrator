@@ -6,25 +6,43 @@ import RecordsModel 1.0
 BasicConfigPanel {
     id: root
 
-    title: "uTorrent Config Panel"
+//    title: "uTorrent Config Panel"
 
     function getConfigedAccessor() {
         return RecordsAccessorFactory.createUTorrentAccessor(appdataEdit.path, extraEdit.path);
     }
 
-//    ColumnLayout {
-    Column {
-        FilePathField {
-            id: appdataEdit
-//            Layout.fillWidth: true
+    GridLayout {
+        anchors { left: parent.left; right: parent.right }
+        columns: 2
+        rowSpacing: 5
+        columnSpacing: 10
 
-            label: "APPDATA Directory:"
+        Text {
+            Layout.alignment: Qt.AlignRight
+
+            text: qsTr("APPDATA Directory:")
         }
-        FilePathField {
-            id: extraEdit
-//            Layout.fillWidth: true
+        FilePathField { id: appdataEdit }
 
-            label: "Extra Torrents Directory:"
+        Text {
+            Layout.alignment: Qt.AlignRight
+
+            text: qsTr("Extra Torrents Directory:")
+        }
+        FilePathField { id: extraEdit }
+
+        Item {
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            implicitHeight: childrenRect.height
+
+            Button {
+                anchors.right: parent.right
+                text: qsTr("OK")
+
+                onClicked: accepted()
+            }
         }
     }
 }

@@ -7,7 +7,7 @@ Button {
     implicitWidth: 25
 
     property string briefText: ">"
-    property string detailText: "Transfer To Right >"
+    property string detailText: qsTr("Transfer To Right >")
     property real briefWidth: 25
     property real detailWidth: 145
     property real animationDuration: 200
