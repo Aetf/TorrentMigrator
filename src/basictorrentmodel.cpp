@@ -1,12 +1,17 @@
 #include <QBencodeValue>
+#include <QFuture>
+#include <QFutureWatcher>
 #include <QSize>
+#include <QtConcurrent/QtConcurrent>
 #include "basictorrentmodel.h"
 #include "basictorrentitem.h"
 
 BasicTorrentModel::BasicTorrentModel(IRecordsAccessor *accessor, QObject *parent)
-    : QAbstractTableModel(parent), accessor(accessor)
+    : QAbstractTableModel(parent), accessor(accessor),
+      needFetchData(true), m_taskRunning(false)
 {
-    pullData();
+    connect(&taskWatcher, &QFutureWatcher<QList<TorrentRecord>>::finished,
+            this, &BasicTorrentModel::handleData);
 }
 
 BasicTorrentModel::~BasicTorrentModel()
@@ -90,6 +95,11 @@ int BasicTorrentModel::columnCount(const QModelIndex &parent) const
     return ColCount;
 }
 
+bool BasicTorrentModel::canFetchMore(const QModelIndex &/*parent*/) const
+{
+    return needFetchData;
+}
+
 bool BasicTorrentModel::insertRowsWithoutAddToBackend(int position,
                                                       const QList<BasicTorrentItem *> rows)
 {
@@ -144,15 +154,41 @@ void BasicTorrentModel::clear()
     items.clear();
 }
 
-bool BasicTorrentModel::pullData()
+void BasicTorrentModel::fetchMore(const QModelIndex &/*parent*/)
 {
-    QList<TorrentRecord> records;
-    if (!accessor->readAll(records)) { return false; }
+    if (taskRunning()) {
+        return;
+    }
+    setTaskRunning(true);
+    auto recordsFuture = QtConcurrent::run(this, &BasicTorrentModel::pullData);
+    taskWatcher.setFuture(recordsFuture);
+    return;
+}
 
+void BasicTorrentModel::handleData()
+{
+    setTaskRunning(false);
+    auto records = taskWatcher.future().result();
     clear();
     QList<BasicTorrentItem *> rowsToInsert;
     for (auto record : records) {
         rowsToInsert << new BasicTorrentItem(this, record);
     }
-    return insertRowsWithoutAddToBackend(0, rowsToInsert);
+    insertRowsWithoutAddToBackend(0, rowsToInsert);
+    needFetchData = false;
+}
+
+QList<TorrentRecord> BasicTorrentModel::pullData()
+{
+    QList<TorrentRecord> records;
+    accessor->readAll(records);
+    return records;
+}
+
+void BasicTorrentModel::setTaskRunning(bool value)
+{
+    if (value != m_taskRunning) {
+        m_taskRunning = value;
+        emit taskRunningChanged();
+    }
 }

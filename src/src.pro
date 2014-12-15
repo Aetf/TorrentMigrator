@@ -2,6 +2,7 @@ include(../defaults.pri)
 TEMPLATE =  lib
 
 QT       -= gui
+QT       += concurrent
 
 TARGET   =  torrentBackends
 CONFIG   -= app_bundle
