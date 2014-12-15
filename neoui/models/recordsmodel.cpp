@@ -3,11 +3,17 @@
 
 RecordsModel::RecordsModel(QObject *parent) : QIdentityProxyModel(parent)
 {
-
+    connect(this, &RecordsModel::sourceModelChanged,
+            this, &RecordsModel::onSourceModelChanged);
 }
 
 RecordsModel::~RecordsModel()
 {
+}
+
+void RecordsModel::onSourceModelChanged()
+{
+//    emit
 }
 
 RecordsAccessorObject *RecordsModel::accessor() const
@@ -24,11 +30,12 @@ void RecordsModel::setAccessor(RecordsAccessorObject *accessor)
         }
 
         auto oldModel = sourceModel();
-        setSourceModel(nullptr);
-        delete oldModel;
         if (m_accessor && m_accessor->get()) {
             setSourceModel(new BasicTorrentModel(m_accessor->take(), this));
+        } else {
+            setSourceModel(nullptr);
         }
+        delete oldModel;
 
         emit accessorChanged();
     }

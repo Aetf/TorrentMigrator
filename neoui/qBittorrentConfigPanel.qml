@@ -7,10 +7,22 @@ BasicConfigPanel {
     title: "qBittorrent Config Panel"
 
     function getConfigedAccessor() {
-        return RecordsAccessorFactory.createLibTorrentAccessor("", "");
+        return RecordsAccessorFactory.createLibTorrentAccessor(configDirEdit.path, backupDirEdit.path);
     }
 
-    Rectangle {
-        color: Qt.lighter("gray")
+//    ColumnLayout {
+    Column {
+        FilePathField {
+            id: configDirEdit
+//            Layout.fillWidth: true
+
+            label: "Config Directory:"
+        }
+        FilePathField {
+            id: backupDirEdit
+//            Layout.fillWidth: true
+
+            label: "Backup Directory:"
+        }
     }
 }

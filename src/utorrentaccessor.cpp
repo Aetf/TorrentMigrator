@@ -297,7 +297,7 @@ std::pair<SimpleTorrentInfo, QString> uTorrentAccessor::loadTorrentFile(
     dir.makeDirectory();
     dir.setFileName(filename);
     fullpath = dir.toString().c_str();
-    qDebug() << "uTorrentAccessor: try" << fullpath;
+//    qDebug() << "uTorrentAccessor: try" << fullpath;
     if (ti.loadFile(fullpath)) { return std::make_pair(ti, fullpath); }
 
     // then try extra torrent dir if we have one
@@ -306,7 +306,7 @@ std::pair<SimpleTorrentInfo, QString> uTorrentAccessor::loadTorrentFile(
         dir.makeDirectory();
         dir.setFileName(filename);
         fullpath = dir.toString().c_str();
-        qDebug() << "uTorrentAccessor: try" << fullpath;
+//        qDebug() << "uTorrentAccessor: try" << fullpath;
         if (ti.loadFile(fullpath)) { return std::make_pair(ti, fullpath); }
     }
 

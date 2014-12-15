@@ -7,6 +7,7 @@
 #include "models/recordsmodel.h"
 #include "models/recordsaccessorobject.h"
 #include "models/recordsaccessorfactory.h"
+#include "models/dialoghelper.h"
 
 void registerRecordsModel();
 
@@ -33,4 +34,6 @@ void registerRecordsModel()
     qmlRegisterSingletonType<RecordsAccessorFactory>("RecordsModel", 1, 0, "RecordsAccessorFactory", RecordsAccessorFactory::RecordsAccessorFactoryProvider);
     qmlRegisterType<RecordsModel>("RecordsModel", 1, 0, "RecordsModel");
     qmlRegisterType<RecordsAccessorObject>("RecordsModel", 1, 0, "RecordsAccessorObject");
+
+    qmlRegisterSingletonType<DialogHelper>("RecordsModel", 1, 0, "DialogHelper", DialogHelper::DialogHelperProvider);
 }

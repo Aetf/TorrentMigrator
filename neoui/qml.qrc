@@ -10,5 +10,6 @@
         <file>qBittorrentConfigPanel.qml</file>
         <file>images/more.png</file>
         <file>BasicConfigPanel.qml</file>
+        <file>FilePathField.qml</file>
     </qresource>
 </RCC>

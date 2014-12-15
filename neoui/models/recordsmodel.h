@@ -45,7 +45,8 @@ public:
 signals:
     void accessorChanged();
 
-public slots:
+private slots:
+    void onSourceModelChanged();
 
 private:
     RecordsAccessorObject *m_accessor;

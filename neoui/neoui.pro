@@ -12,11 +12,13 @@ LIBS     += -lQBencode -lPocoFoundation
 HEADERS += \
     models/recordsmodel.h \
     models/recordsaccessorfactory.h \
-    models/recordsaccessorobject.h
+    models/recordsaccessorobject.h \
+    models/dialoghelper.h
 
 SOURCES += main.cpp \
     models/recordsmodel.cpp \
-    models/recordsaccessorfactory.cpp
+    models/recordsaccessorfactory.cpp \
+    models/dialoghelper.cpp
 
 RESOURCES += qml.qrc
 

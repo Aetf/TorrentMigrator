@@ -4,7 +4,7 @@ import QtQuick.Controls 1.2
 Item {
     id: root
 
-    default property Component content
+    default property alias contentData: placeholder.data
     property alias title: titleText.text
     signal accepted()
 
@@ -12,27 +12,28 @@ Item {
         return {};
     }
 
-    Column {
-        anchors.centerIn: parent
-        Text {
-            id: titleText
-            anchors.horizontalCenter: parent.horizontalCenter
+    Text {
+        id: titleText
+        anchors.top : parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
 
-            text: "Config Panel"
-        }
+        text: "Config Panel"
+    }
 
-        Loader {
-            anchors.horizontalCenter: parent.horizontalCenter
+    Item {
+        id: placeholder
+        anchors.top: titleText.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
 
-            sourceComponent: content
-        }
+    }
 
-        Button {
-            anchors.horizontalCenter: parent.horizontalCenter
+    Button {
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
 
-            text: "OK"
+        text: "OK"
 
-            onClicked: accepted()
-        }
+        onClicked: accepted()
     }
 }

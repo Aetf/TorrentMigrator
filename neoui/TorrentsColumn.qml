@@ -110,18 +110,38 @@ Item {
         TableView {
             id: torrentsList
             anchors.fill: parent
+            model: recordsModel;
 
-            Repeater {
-                model: recordsModel.columnRoles()
-
-                TableViewColumn {
-                    role: recordsModel.roleName(modelData)
-                    title: recordsModel.headerData(recordsModel.columnRoleToSection(modelData))
-                    width: 100
+            function clearAndDestoryColumns() {
+                while (columnCount > 0) {
+                    var column = getColumn(0);
+                    removeColumn(0);
+                    column.destory();
                 }
             }
 
-            model: recordsModel;
+            function populateHeaderData() {
+                clearAndDestoryColumns();
+                for (var i = 0; i < model.columnRoles().length; i++) {
+                    var role = model.columnRoles()[i],
+                        roleName = model.roleName(role),
+                        section = model.columnRoleToSection(role),
+                        title = model.headerData(section);
+
+                    addColumn(headerComponent.createObject(torrentsList,
+                                     { "role": roleName, "title": title }));
+                }
+            }
+
+            onModelChanged: {
+                model.modelReset.connect(populateHeaderData);
+            }
+
+        }
+
+        Component {
+            id: headerComponent
+            TableViewColumn { }
         }
 
         RecordsModel {
