@@ -13,7 +13,12 @@ RecordsModel::~RecordsModel()
 
 void RecordsModel::onSourceModelChanged()
 {
-//    emit
+    auto model = qobject_cast<BasicTorrentModel*>(sourceModel());
+    if (model) {
+        connect(model, &BasicTorrentModel::taskRunningChanged,
+                this, &RecordsModel::busyChanged);
+        emit busyChanged();
+    }
 }
 
 RecordsAccessorObject *RecordsModel::accessor() const
@@ -41,10 +46,19 @@ void RecordsModel::setAccessor(RecordsAccessorObject *accessor)
     }
 }
 
+bool RecordsModel::busy() const
+{
+    auto model = qobject_cast<BasicTorrentModel*>(sourceModel());
+    if (model) {
+        return model->taskRunning();
+    }
+    return false;
+}
+
 QVariant RecordsModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {
-    case ColumnRoles::IndexRole:
+    case ColumnRoles::NaturalIndexRole:
     case ColumnRoles::NameRole:
     case ColumnRoles::TorrentPathRole:
     case ColumnRoles::SavePathRole:
@@ -65,7 +79,7 @@ QVariant RecordsModel::headerData(int section, Qt::Orientation orientation,
 QList<int> RecordsModel::columnRoles() const
 {
     QList<int> list;
-    list << ColumnRoles::IndexRole
+    list << ColumnRoles::NaturalIndexRole
          << ColumnRoles::NameRole
          << ColumnRoles::TorrentPathRole
          << ColumnRoles::SavePathRole
@@ -81,7 +95,7 @@ QByteArray RecordsModel::roleName(int role) const
 int RecordsModel::columnRoleToSection(int role) const
 {
     switch (role) {
-    case ColumnRoles::IndexRole:
+    case ColumnRoles::NaturalIndexRole:
     case ColumnRoles::NameRole:
     case ColumnRoles::TorrentPathRole:
     case ColumnRoles::SavePathRole:
@@ -95,7 +109,7 @@ int RecordsModel::columnRoleToSection(int role) const
 QHash<int, QByteArray> RecordsModel::roleNames() const
 {
     auto names = QIdentityProxyModel::roleNames();
-    names[ColumnRoles::IndexRole] = "index";
+    names[ColumnRoles::NaturalIndexRole] = "naturalIndex";
     names[ColumnRoles::NameRole] = "name";
     names[ColumnRoles::TorrentPathRole] = "torrentPath";
     names[ColumnRoles::SavePathRole] = "savePath";

@@ -133,7 +133,7 @@ Item {
             id: torrentsList
             anchors.fill: parent
             model: recordsModel;
-            selectionMode: SelectionMode.MultiSelection
+//            selectionMode: SelectionMode.MultiSelection
 
             onModelChanged: {
                 model.modelReset.connect(populateHeaderData);
@@ -157,11 +157,17 @@ Item {
 
                     var col = addColumn(headerComponent.createObject(torrentsList,
                                      { "role": roleName, "title": title }));
-                    if (role === ColumnRoles.IndexRole) {
+                    if (role === ColumnRoles.NaturalIndexRole) {
                         col.width = 25;
                     }
                 }
             }
+        }
+
+        BusyIndicator {
+            anchors.centerIn: torrentsList
+            running: recordsModel.busy
+            visible: recordsModel.busy
         }
 
         Component {

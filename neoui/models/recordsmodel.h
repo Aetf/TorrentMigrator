@@ -13,7 +13,7 @@ class ColumnRoles : public QObject
     Q_ENUMS(ColumnCount)
 public:
     enum Roles {
-        IndexRole = Qt::UserRole + BasicTorrentModel::Col_No,
+        NaturalIndexRole = Qt::UserRole + BasicTorrentModel::Col_No,
         NameRole = Qt::UserRole + BasicTorrentModel::Col_Name,
         TorrentPathRole = Qt::UserRole + BasicTorrentModel::Col_TorrentPath,
         SavePathRole = Qt::UserRole + BasicTorrentModel::Col_SavePath,
@@ -30,6 +30,7 @@ class RecordsModel : public QIdentityProxyModel
     Q_PROPERTY(RecordsAccessorObject *accessor
                READ accessor WRITE setAccessor
                NOTIFY accessorChanged)
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_ENUMS(ColumnRoles)
     Q_ENUMS(ColumnCount)
 public:
@@ -38,6 +39,8 @@ public:
 
     RecordsAccessorObject *accessor() const;
     void setAccessor(RecordsAccessorObject *accessor);
+
+    bool busy() const;
 
     Q_INVOKABLE int columnRoleToSection(int role) const;
     Q_INVOKABLE QList<int> columnRoles() const;
@@ -51,12 +54,14 @@ public:
 
 signals:
     void accessorChanged();
+    void busyChanged();
 
 private slots:
     void onSourceModelChanged();
 
 private:
     RecordsAccessorObject *m_accessor;
+    bool m_busy;
 };
 
 #endif // RECORDSMODEL_H
