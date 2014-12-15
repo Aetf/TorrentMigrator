@@ -18,10 +18,10 @@ RowLayout {
     Button {
         id: browseBtn
         Layout.maximumWidth: implicitWidth
-        text: "Browse..."
+        text: qsTr("Browse...")
 
         onClicked: {
-            root.path = DialogHelper.getExistingDirectory("Choose Directory", root.path);
+            root.path = DialogHelper.getExistingDirectory(qsTr("Choose Directory"), root.path);
         }
     }
 }
