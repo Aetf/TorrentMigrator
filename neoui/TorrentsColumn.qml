@@ -24,12 +24,12 @@ Item {
         }
         ComboBox {
             id: backendCombo
-            model: dummyBackendModel
+            model: RecordsAccessorFactory.accessors()
             textRole: "name"
 
             onCurrentIndexChanged: {
                 if (currentIndex != -1) {
-                    backendConfigPanel.show(model.get(currentIndex).configPanelSource);
+                    backendConfigPanel.show(model[currentIndex].configPanelSource);
                 }
             }
         }
@@ -177,18 +177,6 @@ Item {
 
         RecordsModel {
             id: recordsModel;
-        }
-    }
-
-    ListModel {
-        id: dummyBackendModel
-        ListElement {
-            name: "uTorrent"
-            configPanelSource: "uTorrentConfigPanel.qml"
-        }
-        ListElement {
-            name: "qBittorrent"
-            configPanelSource: "qBittorrentConfigPanel.qml"
         }
     }
 }
