@@ -22,28 +22,28 @@ DeviceMapTransformer::~DeviceMapTransformer()
 bool DeviceMapTransformer::setup(QString args)
 {
     const QString mark("=>");
-    QVariantHash argsHash;
+    QVariantMap argsMap;
     for (auto line : args.split('\n')) {
         int idx = line.indexOf(mark);
         if (idx != -1) {
             auto left = line.left(idx);
             auto right = line.right(line.size() - mark.size() - idx);
             if (!right.trimmed().isEmpty()) {
-                argsHash[left.trimmed()] = right.trimmed();
+                argsMap[left.trimmed()] = right.trimmed();
             }
         }
     }
-    return setup(argsHash);
+    return setup(argsMap);
 }
 
 /*!
  * \brief setup
  * \param args
- *     "I:/" => "/media/xxx"
- *     "D:" => "/mnt/abc"
+ *     "I:/" : "/media/xxx"
+ *     "D:" : "/mnt/abc"
  * \return
  */
-bool DeviceMapTransformer::setup(QVariantHash args)
+bool DeviceMapTransformer::setup(QVariantMap args)
 {
     for (auto key : args.keys()) {
         if (!QRegExp(R"([a-zA-Z]:[/\\]?)").exactMatch(key)) { continue; }

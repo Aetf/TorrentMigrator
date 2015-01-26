@@ -42,7 +42,7 @@ void qBittorrentConfPanel::browseBackupDir()
 IRecordsAccessor *qBittorrentConfPanel::configedAccessor() const
 {
     auto accessor = new LibtorrentAccessor;
-    QVariantHash args;
+    QVariantMap args;
     args["configDir"] = ui->configDirPathEdit->text();
     args["backupDir"] = ui->backupDirPathEdit->text();
     accessor->setup(args);

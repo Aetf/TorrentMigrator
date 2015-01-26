@@ -29,7 +29,7 @@ uTorrentAccessor::~uTorrentAccessor()
  *     "extratorrent" => path to extratorrent dir
  * \return
  */
-bool uTorrentAccessor::setup(QVariantHash args)
+bool uTorrentAccessor::setup(QVariantMap args)
 {
     appdataPath = args["appdata"].toString();
     extraTorrentPath = args["extratorrent"].toString();

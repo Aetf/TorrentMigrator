@@ -15,7 +15,7 @@ protected:
     IRecordsAccessor *getAccessor() const { return ira; }
 
     IRecordsAccessor *getConfigedAccessor() {
-        QVariantHash args;
+        QVariantMap args;
         args["appdata"] = "data/uTorrent/appdata";
         args["extratorrent"] = "data/uTorrent/extra";
         ira->setup(args);
@@ -28,7 +28,7 @@ protected:
 TEST_F(uTorrentAccessorTest, Setup)
 {
     IRecordsAccessor *ira = getAccessor();
-    QVariantHash args;
+    QVariantMap args;
     args["appdata"] = "data/uTorrent/appdata";
     args["extratorrent"] = "data/uTorrent/extra";
     EXPECT_EQ(true, ira->setup(args)) << "setup failed";

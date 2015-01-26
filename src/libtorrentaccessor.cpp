@@ -26,7 +26,7 @@ LibtorrentAccessor::~LibtorrentAccessor()
  *     "backupDir" => path to backup dir
  * \return
  */
-bool LibtorrentAccessor::setup(QVariantHash args)
+bool LibtorrentAccessor::setup(QVariantMap args)
 {
     configDir = args["configDir"].toString();
     backupDir = args["backupDir"].toString();

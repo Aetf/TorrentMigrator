@@ -21,39 +21,40 @@ PathRegexTransformer::~PathRegexTransformer()
  */
 bool PathRegexTransformer::setup(QString args)
 {
-    QVariantHash argsHash;
-    for (auto line : args.split('\n')) {
-        if (line.isEmpty()) continue;
+    QVariantMap argsMap;
+    QStringList list = args.split('\n');
+    argsMap["actionList"] = list;
 
-        auto mark = line[0];
-        auto regex = line.section(mark, 0, 0, QString::SectionSkipEmpty);
-        auto replace = line.section(mark, 1, 1, QString::SectionSkipEmpty);
-        if (!regex.isEmpty()) {
-            argsHash[regex] = replace;
-        }
-    }
-    return setup(argsHash);
+    return setup(argsMap);
 }
 
 /*!
  * \brief setup
  * \param args
- *     "#^/media/(\w)/abc#/\1/abc#"
- *     "/john/alice/"
+ *     QStringList actionList:
+ *         "#^/media/(\w)/abc#/\1/abc#"
+ *         "/john/alice/"
  * \return
  */
-bool PathRegexTransformer::setup(QVariantHash args)
+bool PathRegexTransformer::setup(QVariantMap args)
 {
-    for (auto key : args.keys()) {
-        QRegExp regexp(key);
-        if (!regexp.isValid()) { continue; }
-        if (!args[key].canConvert<QString>()) { continue; }
+    QStringList list = args["actionList"].toStringList();
+    if (list.isEmpty()) { return false; }
 
-        auto replacement = args[key].toString();
-        regexList << std::make_pair(regexp, replacement);
+    for (auto line : list) {
+        if (line.length() < 2) { continue; }
+
+        auto mark = line[0];
+        auto regex = line.section(mark, 0, 0, QString::SectionSkipEmpty);
+        auto replace = line.section(mark, 1, 1, QString::SectionSkipEmpty);
+
+        QRegExp regexp(regex);
+        if (!regexp.isValid()) { continue; }
+
+        regexList << std::make_pair(regexp, replace);
 
         qDebug() << "regex added:"
-                 << regexp.pattern() << "=>" << replacement;
+                 << regexp.pattern() << "=>" << replace;
     }
     return true;
 }

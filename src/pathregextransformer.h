@@ -4,12 +4,15 @@
 #include "irecordstransformer.h"
 
 class QRegExp;
+typedef QList<std::pair<QRegExp, QString>> ActionList;
+
 class PathRegexTransformer : public IRecordsTransformer
 {
 public:
     PathRegexTransformer();
     ~PathRegexTransformer();
 
+    virtual bool setup(QVariantMap args);
     /*!
      * \brief setup
      * \param args
@@ -17,13 +20,12 @@ public:
      *     "/john/alice/"
      * \return
      */
-    virtual bool setup(QVariantHash args);
     virtual bool setup(QString args);
     virtual TorrentRecord transform(const TorrentRecord &input) const;
     virtual TorrentRecord transformBack(const TorrentRecord &input) const;
 
 private:
-    QList< std::pair<QRegExp, QString>> regexList;
+    ActionList regexList;
 };
 
 #endif // PATAPREFIXTRANSFORMER_H

@@ -2,6 +2,8 @@
 #define UTILS_H
 
 #include <QString>
+#include <QList>
+#include <QObject>
 
 class QBencodeDict;
 class QByteArray;
@@ -14,5 +16,13 @@ public:
     static QString normalizeSeperator(QString &path);
     static QString normalizeSeperator(const QString &path);
 };
+
+class AutoObjectList
+{
+public:
+    ~AutoObjectList();
+    QList<QObject*> list;
+};
+
 
 #endif // UTILS_H

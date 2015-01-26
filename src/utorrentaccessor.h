@@ -18,7 +18,7 @@ public:
      *     "extratorrent" => path to extratorrent dir
      * \return
      */
-    virtual bool setup(QVariantHash args);
+    virtual bool setup(QVariantMap args);
     virtual bool readAll(QList<TorrentRecord> &list);
     virtual bool writeAll(QList<TorrentRecord> &records);
     virtual bool add(const TorrentRecord &record);

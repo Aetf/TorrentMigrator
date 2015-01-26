@@ -43,7 +43,7 @@ void uTorrentConfPanel::browseExtraTorrents()
 IRecordsAccessor *uTorrentConfPanel::configedAccessor() const
 {
     auto accessor = new uTorrentAccessor;
-    QVariantHash args;
+    QVariantMap args;
     args["appdata"] = ui->appdataPathEdit->text();
     args["extratorrent"] = ui->extraTorrentsPathEdit->text();
     accessor->setup(args);

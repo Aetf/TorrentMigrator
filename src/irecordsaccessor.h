@@ -3,7 +3,7 @@
 
 #include <QList>
 #include <QVariant>
-#include <QHash>
+#include <QMap>
 #include "torrentrecord.h"
 
 class IRecordsAccessor
@@ -11,7 +11,7 @@ class IRecordsAccessor
 public:
     virtual ~IRecordsAccessor() { }
 
-    virtual bool setup(QVariantHash args) = 0;
+    virtual bool setup(QVariantMap args) = 0;
     virtual bool readAll(QList<TorrentRecord> &list) = 0;
     virtual bool writeAll(QList<TorrentRecord> &records) = 0;
     virtual bool add(const TorrentRecord &record) = 0;

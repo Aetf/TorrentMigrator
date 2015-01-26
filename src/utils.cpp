@@ -46,3 +46,10 @@ QString Utils::normalizeSeperator(const QString &path)
     return normalizeSeperator(copy);
 }
 
+
+AutoObjectList::~AutoObjectList()
+{
+    for (auto obj : list) {
+        delete obj;
+    }
+}

@@ -11,6 +11,7 @@ public:
     DeviceMapTransformer();
     ~DeviceMapTransformer();
 
+    virtual bool setup(QVariantMap args);
     /*!
      * \brief setup
      * \param args
@@ -18,7 +19,6 @@ public:
      *     "D:" => "/mnt/abc"
      * \return
      */
-    virtual bool setup(QVariantHash args);
     virtual bool setup(QString args);
     virtual TorrentRecord transform(const TorrentRecord &input) const;
     virtual TorrentRecord transformBack(const TorrentRecord &input) const;
