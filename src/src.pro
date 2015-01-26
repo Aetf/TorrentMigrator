@@ -17,7 +17,8 @@ SOURCES  += \
     libtorrentaccessor.cpp \
     simpletorrentinfo.cpp \
     basictorrentitem.cpp \
-    devicemaptransformer.cpp
+    devicemaptransformer.cpp \
+    pathregextransformer.cpp
 
 HEADERS  += \
     torrentrecord.h \
@@ -29,4 +30,5 @@ HEADERS  += \
     simpletorrentinfo.h \
     basictorrentitem.h \
     irecordstransformer.h \
-    devicemaptransformer.h
+    devicemaptransformer.h \
+    pathregextransformer.h

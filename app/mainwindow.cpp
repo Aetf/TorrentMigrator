@@ -119,6 +119,7 @@ void MainWindow::btnTransferToRight()
 
     auto transformer = new DeviceMapTransformer();
     transformer->setup("I:/ => /media/AetfのHD\n"
+                       "Y:/ => /media/AetfのHD.Ex\n"
                        "F:/ => /media/Documents\n"
                        "D:/ => /media/Softwares");
 
