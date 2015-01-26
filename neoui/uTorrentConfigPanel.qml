@@ -7,9 +7,13 @@ BasicConfigPanel {
     id: root
 
 //    title: "uTorrent Config Panel"
+    property string name: "uTorrent"
 
-    function getConfigedAccessor() {
-        return RecordsAccessorFactory.createUTorrentAccessor(appdataEdit.path, extraEdit.path);
+    function getConfigedArgs() {
+        return {
+            "appdata" : appdataEdit.path,
+            "extratorrent" : extraEdit.path
+        };
     }
 
     GridLayout {

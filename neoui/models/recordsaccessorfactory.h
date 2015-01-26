@@ -2,9 +2,10 @@
 #define RECORDSACCESSORFACTORY_H
 
 #include <QObject>
-#include <QScopedPointer>
+#include <QQmlListProperty>
 #include <QString>
-#include "recordsaccessorobject.h"
+#include "irecordsaccessor.h"
+#include "utils.h"
 
 class QQmlEngine;
 class QJSEngine;
@@ -34,34 +35,24 @@ private:
     QString m_configPanelSource;
 };
 
-class AccessorList
-{
-public:
-    ~AccessorList();
-    QList<QObject*> list;
-};
-
 class RecordsAccessorFactory : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<QObject> availableAccessors READ availableAccessors)
 public:
     explicit RecordsAccessorFactory(QObject *parent = 0);
 
-    Q_INVOKABLE
-    RecordsAccessorObject *createUTorrentAccessor(const QString &appdata,
-                                                  const QString &extra);
-    Q_INVOKABLE
-    RecordsAccessorObject *createLibTorrentAccessor(const QString &configDir,
-                                                    const QString &backupDir);
+    IRecordsAccessor *createAccessor(const QString &name, const QVariantMap &args);
 
-    Q_INVOKABLE
-    QList<QObject *> accessors();
+    QQmlListProperty<QObject> availableAccessors();
 
     static QObject *RecordsAccessorFactoryProvider(QQmlEngine *engine,
                                                    QJSEngine *scriptEngine);
 
+    static void initialize();
+
 private:
-    static AccessorList knownAccesors;
+    static AutoObjectList knownAccessors;
     static bool initialized;
 };
 

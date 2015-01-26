@@ -24,7 +24,7 @@ Item {
         }
         ComboBox {
             id: backendCombo
-            model: RecordsAccessorFactory.accessors()
+            model: RecordsAccessorFactory.availableAccessors
             textRole: "name"
 
             onCurrentIndexChanged: {
@@ -85,7 +85,9 @@ Item {
             Connections {
                 target: panelPlaceHolder.item
                 onAccepted: {
-                    recordsModel.accessor = panelPlaceHolder.item.getConfigedAccessor();
+                    var args = panelPlaceHolder.item.getConfigedArgs();
+                    var name = panelPlaceHolder.item.name;
+                    recordsModel.setAccessor(name, args);
                     backendConfigPanel.hide();
                 }
             }

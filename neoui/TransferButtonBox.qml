@@ -1,10 +1,13 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import RecordsModel 1.0
 
 ColumnLayout {
     id: root
 
+    property alias btnTransferToRight: btnTransferToRight
+    property alias btnTransferToLeft: btnTransferToLeft
     property real buttonHeight: 25
     property real buttonWidth: 25
     property real animationDuration: 350
@@ -17,8 +20,8 @@ ColumnLayout {
         height: root.buttonHeight
         briefWidth: root.buttonWidth
         detailWidth: settingsButtonBox.fullWidth()
-        briefText: ">"
-        detailText: qsTr("Transfer To Right >")
+        briefText: "►"
+        detailText: qsTr("Transfer To Right ►")
         animationDuration: root.animationDuration
         easingType: root.easingType
     }
@@ -37,6 +40,12 @@ ColumnLayout {
             implicitHeight: 200
 
             color: "orange"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    console.log(RecordsTransformerFactory.testPointer(RecordsTransformerFactory.createTest()));
+                }
+            }
         }
 
         FlyoutPanel {
@@ -176,8 +185,8 @@ ColumnLayout {
         height: root.buttonHeight
         briefWidth: root.buttonWidth
         detailWidth: settingsButtonBox.fullWidth()
-        briefText: "<"
-        detailText: qsTr("< Transfer To Left")
+        briefText: "◄"
+        detailText: qsTr("◄ Transfer To Left")
         animationDuration: root.animationDuration
         easingType: root.easingType
     }

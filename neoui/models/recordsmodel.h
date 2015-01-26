@@ -3,8 +3,7 @@
 
 #include <QIdentityProxyModel>
 #include "basictorrentmodel.h"
-
-class RecordsAccessorObject;
+#include "recordsaccessorfactory.h"
 
 class ColumnRoles : public QObject
 {
@@ -27,9 +26,6 @@ public:
 class RecordsModel : public QIdentityProxyModel
 {
     Q_OBJECT
-    Q_PROPERTY(RecordsAccessorObject *accessor
-               READ accessor WRITE setAccessor
-               NOTIFY accessorChanged)
     Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
     Q_ENUMS(ColumnRoles)
     Q_ENUMS(ColumnCount)
@@ -37,10 +33,10 @@ public:
     explicit RecordsModel(QObject *parent = 0);
     ~RecordsModel();
 
-    RecordsAccessorObject *accessor() const;
-    void setAccessor(RecordsAccessorObject *accessor);
-
     bool busy() const;
+
+    Q_INVOKABLE
+    void setAccessor(const QString &name, const QVariantMap &args);
 
     Q_INVOKABLE int columnRoleToSection(int role) const;
     Q_INVOKABLE QList<int> columnRoles() const;
@@ -53,14 +49,12 @@ public:
     virtual QHash<int, QByteArray> roleNames() const;
 
 signals:
-    void accessorChanged();
     void busyChanged();
 
 private slots:
     void onSourceModelChanged();
 
 private:
-    RecordsAccessorObject *m_accessor;
     bool m_busy;
 };
 

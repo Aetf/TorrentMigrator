@@ -7,9 +7,13 @@ BasicConfigPanel {
     id: root
 
 //    title: "qBittorrent Config Panel"
+    property string name: "libtorrent"
 
-    function getConfigedAccessor() {
-        return RecordsAccessorFactory.createLibTorrentAccessor(configDirEdit.path, backupDirEdit.path);
+    function getConfigedArgs() {
+        return {
+            "configDir" : configDirEdit.path,
+            "backupDir" : backupDirEdit.path
+        };
     }
 
     GridLayout {

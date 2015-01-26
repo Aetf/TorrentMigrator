@@ -1,5 +1,5 @@
 #include "recordsmodel.h"
-#include "recordsaccessorobject.h"
+#include "recordsaccessorfactory.h"
 
 RecordsModel::RecordsModel(QObject *parent) : QIdentityProxyModel(parent)
 {
@@ -13,7 +13,7 @@ RecordsModel::~RecordsModel()
 
 void RecordsModel::onSourceModelChanged()
 {
-    auto model = qobject_cast<BasicTorrentModel*>(sourceModel());
+    auto model = qobject_cast<BasicTorrentModel *>(sourceModel());
     if (model) {
         connect(model, &BasicTorrentModel::taskRunningChanged,
                 this, &RecordsModel::busyChanged);
@@ -21,34 +21,23 @@ void RecordsModel::onSourceModelChanged()
     }
 }
 
-RecordsAccessorObject *RecordsModel::accessor() const
+void RecordsModel::setAccessor(const QString &name, const QVariantMap &args)
 {
-    return m_accessor;
-}
+    RecordsAccessorFactory factory;
 
-void RecordsModel::setAccessor(RecordsAccessorObject *accessor)
-{
-    if (accessor != m_accessor) {
-        m_accessor = accessor;
-        if (m_accessor && m_accessor->parent() == nullptr) {
-            m_accessor->setParent(this);
-        }
-
-        auto oldModel = sourceModel();
-        if (m_accessor && m_accessor->get()) {
-            setSourceModel(new BasicTorrentModel(m_accessor->take(), this));
-        } else {
-            setSourceModel(nullptr);
-        }
-        delete oldModel;
-
-        emit accessorChanged();
+    auto ira = factory.createAccessor(name, args);
+    auto oldModel = sourceModel();
+    if (ira) {
+        setSourceModel(new BasicTorrentModel(ira, this));
+    } else {
+        setSourceModel(nullptr);
     }
+    delete oldModel;
 }
 
 bool RecordsModel::busy() const
 {
-    auto model = qobject_cast<BasicTorrentModel*>(sourceModel());
+    auto model = qobject_cast<BasicTorrentModel *>(sourceModel());
     if (model) {
         return model->taskRunning();
     }

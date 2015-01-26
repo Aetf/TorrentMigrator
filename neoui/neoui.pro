@@ -12,7 +12,6 @@ LIBS     += -lQBencode -lPocoFoundation
 HEADERS += \
     models/recordsmodel.h \
     models/recordsaccessorfactory.h \
-    models/recordsaccessorobject.h \
     logic/dialoghelper.h \
     logic/transferlogic.h
 

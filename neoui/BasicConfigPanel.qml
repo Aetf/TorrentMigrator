@@ -8,7 +8,7 @@ Item {
 
     signal accepted()
 
-    function getConfigedAccessor() {
+    function getConfigedArgs() {
         return {};
     }
 }

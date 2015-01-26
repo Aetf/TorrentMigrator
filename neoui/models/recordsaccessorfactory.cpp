@@ -39,55 +39,58 @@ void AccessorDescription::setConfigPanelSource(const QString &source)
     }
 }
 
-AccessorList::~AccessorList()
+RecordsAccessorFactory::RecordsAccessorFactory(QObject *parent)
+    : QObject(parent)
 {
-    for (auto obj : list) {
-        delete obj;
-    }
+    initialize();
 }
 
-RecordsAccessorFactory::RecordsAccessorFactory(QObject *parent) : QObject(parent)
-{ }
-
-RecordsAccessorObject *RecordsAccessorFactory::createUTorrentAccessor(
-    const QString &appdata, const QString &extra)
-{
-    auto ira = new uTorrentAccessor;
-    QVariantHash args;
-    args["appdata"] = appdata;
-    args["extratorrent"] = extra;
-    ira->setup(args);
-    return new RecordsAccessorObject(ira);
-}
-
-RecordsAccessorObject *RecordsAccessorFactory::createLibTorrentAccessor(
-    const QString &configDir, const QString &backupDir)
-{
-    auto ira = new LibtorrentAccessor;
-    QVariantHash args;
-    args["configDir"] = configDir;
-    args["backupDir"] = backupDir;
-    ira->setup(args);
-    return new RecordsAccessorObject(ira);
-}
-
-QList<QObject *> RecordsAccessorFactory::accessors()
-{
-    return knownAccesors.list;
-}
-
-AccessorList RecordsAccessorFactory::knownAccesors = AccessorList();
 bool RecordsAccessorFactory::initialized = false;
+void RecordsAccessorFactory::initialize()
+{
+    if (initialized) { return; }
+    initialized = true;
+
+    knownAccessors.list
+            << new AccessorDescription { "uTorrent", "uTorrentConfigPanel.qml" }
+            << new AccessorDescription { "qBittorrent", "qBittorrentConfigPanel.qml" };
+}
+
+AutoObjectList RecordsAccessorFactory::knownAccessors = AutoObjectList();
 QObject *RecordsAccessorFactory::RecordsAccessorFactoryProvider(QQmlEngine *engine,
                                                                 QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine);
     Q_UNUSED(scriptEngine);
-    if (!initialized) {
-        knownAccesors.list
-                << new AccessorDescription { "uTorrent", "uTorrentConfigPanel.qml" }
-                << new AccessorDescription { "qBittorrent", "qBittorrentConfigPanel.qml" };
-        initialized = true;
-    }
     return new RecordsAccessorFactory;
 }
+
+IRecordsAccessor *RecordsAccessorFactory::createAccessor(const QString &name,
+                                                         const QVariantMap &args)
+{
+    IRecordsAccessor *ira = nullptr;
+    if (name == "uTorrent") {
+        ira = new uTorrentAccessor;
+    } else if (name == "libtorrent") {
+        ira = new LibtorrentAccessor;
+    } else {
+        qDebug() << "warning: unsupported accessor type:" << name;
+        return nullptr;
+    }
+    ira->setup(args);
+    return ira;
+}
+
+QQmlListProperty<QObject> RecordsAccessorFactory::availableAccessors()
+{
+    return QQmlListProperty<QObject>(this, &knownAccessors.list,
+    [](QQmlListProperty<QObject> *property) {
+        auto list = reinterpret_cast<QList<QObject *>*>(property->data);
+        return list->length();
+    },
+    [](QQmlListProperty<QObject> *property, int index) {
+        auto list = reinterpret_cast<QList<QObject *>*>(property->data);
+        return list->at(index);
+    });
+}
+
