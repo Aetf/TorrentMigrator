@@ -15,16 +15,19 @@ class TransformerDescription : public QObject
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
 
 public:
-    TransformerDescription(QObject *parent = nullptr);
-    TransformerDescription(const QString &name, QObject *parent = nullptr);
+    TransformerDescription(IRecordsTransformer* seed, QObject *parent = nullptr);
+    ~TransformerDescription();
 
     QString name() const;
     void setName(const QString &name);
+
+    IRecordsTransformer *seed() const;
 
 signals:
     void nameChanged();
 
 private:
+    IRecordsTransformer* m_seed;
     QString m_name;
 };
 

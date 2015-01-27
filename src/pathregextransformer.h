@@ -12,6 +12,9 @@ public:
     PathRegexTransformer();
     ~PathRegexTransformer();
 
+    virtual QString name() const;
+    virtual IRecordsTransformer *allocate() const;
+
     virtual bool setup(QVariantMap args);
     /*!
      * \brief setup

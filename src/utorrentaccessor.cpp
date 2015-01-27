@@ -13,13 +13,19 @@ using Poco::Path;
 
 uTorrentAccessor::uTorrentAccessor()
     : ready(false)
-{
-
-}
+{ }
 
 uTorrentAccessor::~uTorrentAccessor()
-{
+{ }
 
+IRecordsAccessor* uTorrentAccessor::allocate() const
+{
+    return new uTorrentAccessor();
+}
+
+QString uTorrentAccessor::name() const
+{
+    return QStringLiteral("uTorrent");
 }
 
 /*!

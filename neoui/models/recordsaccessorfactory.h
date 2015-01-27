@@ -19,19 +19,24 @@ class AccessorDescription : public QObject
                WRITE setConfigPanelSource
                NOTIFY configPanelSourceChanged)
 public:
-    AccessorDescription(QObject *parent = nullptr);
-    AccessorDescription(const QString &name, const QString &source,
+    AccessorDescription(IRecordsAccessor *seed, const QString &source,
                         QObject *parent = nullptr);
+    ~AccessorDescription();
 
     QString name() const;
     void setName(const QString &name);
 
     QString configPanelSource() const;
     void setConfigPanelSource(const QString &source);
+
+    IRecordsAccessor *seed() const;
+
 signals:
     void nameChanged();
     void configPanelSourceChanged();
+
 private:
+    IRecordsAccessor *m_seed;
     QString m_name;
     QString m_configPanelSource;
 };

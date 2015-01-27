@@ -1,14 +1,17 @@
 #include "recordstransformerfactory.h"
 #include "devicemaptransformer.h"
+#include "pathregextransformer.h"
 
-TransformerDescription::TransformerDescription(QObject *parent)
+TransformerDescription::TransformerDescription(IRecordsTransformer *seed, QObject *parent)
     : QObject(parent)
+    , m_seed(seed)
+    , m_name(seed->name())
 { }
 
-TransformerDescription::TransformerDescription(const QString &name, QObject *parent)
-    : QObject(parent)
-    , m_name(name)
-{ }
+TransformerDescription::~TransformerDescription()
+{
+    delete m_seed;
+}
 
 QString TransformerDescription::name() const
 {
@@ -22,6 +25,12 @@ void TransformerDescription::setName(const QString &name)
         emit nameChanged();
     }
 }
+
+IRecordsTransformer *TransformerDescription::seed() const
+{
+    return m_seed;
+}
+
 RecordsTransformerFactory::RecordsTransformerFactory(QObject *parent)
     : QObject(parent)
 {
@@ -29,15 +38,19 @@ RecordsTransformerFactory::RecordsTransformerFactory(QObject *parent)
 }
 
 bool RecordsTransformerFactory::initialized = false;
+AutoObjectList RecordsTransformerFactory::knownTransformers = AutoObjectList();
 void RecordsTransformerFactory::initialize()
 {
     if (initialized) { return; }
     initialized = true;
+
+    knownTransformers.list
+    << new TransformerDescription { new DeviceMapTransformer() }
+    << new TransformerDescription { new PathRegexTransformer() };
 }
 
-AutoObjectList RecordsTransformerFactory::knownTransformers = AutoObjectList();
 QObject *RecordsTransformerFactory::RecordsTransformerFactoryProvider(QQmlEngine *engine,
-                                                                QJSEngine *scriptEngine)
+                                                                      QJSEngine *scriptEngine)
 {
     Q_UNUSED(engine);
     Q_UNUSED(scriptEngine);
@@ -55,4 +68,42 @@ QQmlListProperty<QObject> RecordsTransformerFactory::availableTransformers()
         auto list = reinterpret_cast<QList<QObject *>*>(property->data);
         return list->at(index);
     });
+}
+
+IRecordsTransformer *RecordsTransformerFactory::createTransformer(const QString &name,
+                                                                  const QVariantMap &args)
+{
+    IRecordsTransformer *irt = nullptr;
+    for (auto obj : knownTransformers.list) {
+        auto desc = reinterpret_cast<TransformerDescription*>(obj);
+        if (desc->name() == name) {
+            irt = desc->seed()->allocate();
+            break;
+        }
+    }
+    if (irt) {
+        irt->setup(args);
+    } else {
+        qDebug() << "warning: unsupported transformer type:" << name;
+    }
+    return irt;
+}
+
+IRecordsTransformer *RecordsTransformerFactory::createTransformer(const QString &name,
+                                                                  const QString &args)
+{
+    IRecordsTransformer *irt = nullptr;
+    for (auto obj : knownTransformers.list) {
+        auto desc = reinterpret_cast<TransformerDescription*>(obj);
+        if (desc->name() == name) {
+            irt = desc->seed()->allocate();
+            break;
+        }
+    }
+    if (irt) {
+        irt->setup(args);
+    } else {
+        qDebug() << "warning: unsupported transformer type:" << name;
+    }
+    return irt;
 }

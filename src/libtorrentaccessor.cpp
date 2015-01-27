@@ -10,13 +10,19 @@
 
 LibtorrentAccessor::LibtorrentAccessor()
     : ready(false)
-{
-
-}
+{ }
 
 LibtorrentAccessor::~LibtorrentAccessor()
-{
+{ }
 
+IRecordsAccessor* LibtorrentAccessor::allocate() const
+{
+    return new LibtorrentAccessor();
+}
+
+QString LibtorrentAccessor::name() const
+{
+    return QStringLiteral("libtorrent");
 }
 
 /*!

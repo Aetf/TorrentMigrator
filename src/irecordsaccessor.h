@@ -11,6 +11,9 @@ class IRecordsAccessor
 public:
     virtual ~IRecordsAccessor() { }
 
+    virtual IRecordsAccessor* allocate() const = 0;
+    virtual QString name() const = 0;
+
     virtual bool setup(QVariantMap args) = 0;
     virtual bool readAll(QList<TorrentRecord> &list) = 0;
     virtual bool writeAll(QList<TorrentRecord> &records) = 0;

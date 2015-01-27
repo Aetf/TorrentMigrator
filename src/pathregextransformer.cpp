@@ -12,6 +12,16 @@ PathRegexTransformer::~PathRegexTransformer()
 
 }
 
+QString PathRegexTransformer::name() const
+{
+    return QStringLiteral("PathRegexTransformer");
+}
+
+IRecordsTransformer *PathRegexTransformer::allocate() const
+{
+    return new PathRegexTransformer();
+}
+
 /*!
  * \brief setup
  * \param args

@@ -14,6 +14,9 @@ public:
     LibtorrentAccessor();
     ~LibtorrentAccessor();
 
+    virtual IRecordsAccessor* allocate() const;
+    virtual QString name() const;
+
     /*!
      * \brief setup
      * \param args

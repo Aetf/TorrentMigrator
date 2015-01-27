@@ -12,6 +12,16 @@ DeviceMapTransformer::~DeviceMapTransformer()
 
 }
 
+QString DeviceMapTransformer::name() const
+{
+    return QStringLiteral("DeviceMapTransformer");
+}
+
+IRecordsTransformer *DeviceMapTransformer::allocate() const
+{
+    return new DeviceMapTransformer();
+}
+
 /*!
  * \brief setup
  * \param args

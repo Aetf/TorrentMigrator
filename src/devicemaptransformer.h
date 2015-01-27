@@ -11,6 +11,9 @@ public:
     DeviceMapTransformer();
     ~DeviceMapTransformer();
 
+    virtual QString name() const;
+    virtual IRecordsTransformer *allocate() const;
+
     virtual bool setup(QVariantMap args);
     /*!
      * \brief setup

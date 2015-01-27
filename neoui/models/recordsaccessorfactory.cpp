@@ -2,16 +2,18 @@
 #include "utorrentaccessor.h"
 #include "libtorrentaccessor.h"
 
-AccessorDescription::AccessorDescription(QObject *parent)
-    : QObject(parent)
-{ }
-
-AccessorDescription::AccessorDescription(const QString &name, const QString &source,
+AccessorDescription::AccessorDescription(IRecordsAccessor *seed, const QString &source,
                                          QObject *parent)
     : QObject(parent)
-    , m_name(name)
+    , m_seed(seed)
+    , m_name(seed->name())
     , m_configPanelSource(source)
 { }
+
+AccessorDescription::~AccessorDescription()
+{
+    delete m_seed;
+}
 
 QString AccessorDescription::name() const
 {
@@ -39,6 +41,11 @@ void AccessorDescription::setConfigPanelSource(const QString &source)
     }
 }
 
+IRecordsAccessor *AccessorDescription::seed() const
+{
+    return m_seed;
+}
+
 RecordsAccessorFactory::RecordsAccessorFactory(QObject *parent)
     : QObject(parent)
 {
@@ -52,8 +59,8 @@ void RecordsAccessorFactory::initialize()
     initialized = true;
 
     knownAccessors.list
-            << new AccessorDescription { "uTorrent", "uTorrentConfigPanel.qml" }
-            << new AccessorDescription { "qBittorrent", "qBittorrentConfigPanel.qml" };
+    << new AccessorDescription { new uTorrentAccessor(), "uTorrentConfigPanel.qml" }
+    << new AccessorDescription { new LibtorrentAccessor(), "qBittorrentConfigPanel.qml" };
 }
 
 AutoObjectList RecordsAccessorFactory::knownAccessors = AutoObjectList();
@@ -69,15 +76,19 @@ IRecordsAccessor *RecordsAccessorFactory::createAccessor(const QString &name,
                                                          const QVariantMap &args)
 {
     IRecordsAccessor *ira = nullptr;
-    if (name == "uTorrent") {
-        ira = new uTorrentAccessor;
-    } else if (name == "libtorrent") {
-        ira = new LibtorrentAccessor;
+    for (auto obj : knownAccessors.list) {
+        auto desc = reinterpret_cast<AccessorDescription *>(obj);
+        if (desc->name() == name) {
+            ira = desc->seed()->allocate();
+            break;
+        }
+    }
+
+    if (ira) {
+        ira->setup(args);
     } else {
         qDebug() << "warning: unsupported accessor type:" << name;
-        return nullptr;
     }
-    ira->setup(args);
     return ira;
 }
 

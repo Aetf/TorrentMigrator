@@ -13,13 +13,15 @@ HEADERS += \
     models/recordsmodel.h \
     models/recordsaccessorfactory.h \
     models/recordstransformerfactory.h \
-    logic/dialoghelper.h
+    logic/dialoghelper.h \
+    models/transformermodel.h
 
 SOURCES += main.cpp \
     models/recordsmodel.cpp \
     models/recordsaccessorfactory.cpp \
     models/recordstransformerfactory.cpp \
-    logic/dialoghelper.cpp
+    logic/dialoghelper.cpp \
+    models/transformermodel.cpp
 
 RESOURCES += qml.qrc
 
