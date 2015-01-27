@@ -11,6 +11,7 @@ OTHER_FILES += \
     style.astylerc
 
 app.depends = src
+neoui.depends = src
 tests.depends = src
 
 # A custom target to directly run tests
