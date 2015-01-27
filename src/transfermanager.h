@@ -2,11 +2,12 @@
 #define TRANSFERLOGIC_H
 
 
-class TransferLogic
+class TransferManager
 {
 public:
-    TransferLogic();
-    ~TransferLogic();
+    TransferManager();
+    ~TransferManager();
+
 };
 
 #endif // TRANSFERLOGIC_H

@@ -12,16 +12,14 @@ LIBS     += -lQBencode -lPocoFoundation
 HEADERS += \
     models/recordsmodel.h \
     models/recordsaccessorfactory.h \
-    logic/dialoghelper.h \
-    logic/transferlogic.h \
-    models/recordstransformerfactory.h
+    models/recordstransformerfactory.h \
+    logic/dialoghelper.h
 
 SOURCES += main.cpp \
     models/recordsmodel.cpp \
     models/recordsaccessorfactory.cpp \
-    logic/dialoghelper.cpp \
-    logic/transferlogic.cpp \
-    models/recordstransformerfactory.cpp
+    models/recordstransformerfactory.cpp \
+    logic/dialoghelper.cpp
 
 RESOURCES += qml.qrc
 

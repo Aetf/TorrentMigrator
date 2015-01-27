@@ -18,7 +18,8 @@ SOURCES  += \
     simpletorrentinfo.cpp \
     basictorrentitem.cpp \
     devicemaptransformer.cpp \
-    pathregextransformer.cpp
+    pathregextransformer.cpp \
+    transfermanager.cpp
 
 HEADERS  += \
     torrentrecord.h \
@@ -31,4 +32,5 @@ HEADERS  += \
     basictorrentitem.h \
     irecordstransformer.h \
     devicemaptransformer.h \
-    pathregextransformer.h
+    pathregextransformer.h \
+    transfermanager.h
