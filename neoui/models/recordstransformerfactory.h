@@ -31,7 +31,8 @@ private:
 class RecordsTransformerFactory : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<QObject> availableTransformers READ availableTransformers)
+    Q_PROPERTY(QQmlListProperty<QObject> availableTransformers
+               READ availableTransformers CONSTANT)
 public:
     explicit RecordsTransformerFactory(QObject *parent = 0);
 

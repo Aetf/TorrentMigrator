@@ -20,7 +20,8 @@ class AccessorDescription : public QObject
                NOTIFY configPanelSourceChanged)
 public:
     AccessorDescription(QObject *parent = nullptr);
-    AccessorDescription(const QString &name, const QString &source, QObject *parent = nullptr);
+    AccessorDescription(const QString &name, const QString &source,
+                        QObject *parent = nullptr);
 
     QString name() const;
     void setName(const QString &name);
@@ -38,7 +39,8 @@ private:
 class RecordsAccessorFactory : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<QObject> availableAccessors READ availableAccessors)
+    Q_PROPERTY(QQmlListProperty<QObject> availableAccessors
+               READ availableAccessors CONSTANT)
 public:
     explicit RecordsAccessorFactory(QObject *parent = 0);
 
