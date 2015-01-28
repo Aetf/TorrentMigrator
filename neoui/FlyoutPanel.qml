@@ -10,10 +10,6 @@ Item {
     property bool enableDetect: false
     property bool show: true
 
-    onEnableDetectChanged: {
-        show = enableDetect ? show : true;
-    }
-
     MouseArea {
         id: hoverDetector
         anchors.fill: parent

@@ -42,17 +42,85 @@ ColumnLayout {
             id: transformerList
             anchors.fill: parent
             implicitHeight: 200
+            clip: true
             model: TransformerModel { }
             delegate: listDelegate
             highlight: listHighLight
+            footer: Rectangle {
+                height: 25
+                width: ListView.view.width
+                color: "transparent"
+            }
+
+            NumberAnimation {
+                id: scrollAnim
+                target: transformerList
+                property: "contentY"
+                duration: 100
+            }
 
             Component {
                 id: listDelegate
-                Text {
-                    text: model.name
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: transformerList.currentIndex = index
+                Column {
+                    id: itemRoot
+                    Text {
+                        id: briefText
+                        width: itemRoot.ListView.view.width
+                        text: model.name
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: transformerList.currentIndex = index
+                            onDoubleClicked: {
+                                var st = itemRoot.state === "" ? "editing" : ""
+                                itemRoot.state = st
+                            }
+                        }
+                    }
+                    TextArea {
+                        id: detailEdit
+                        anchors.left: briefText.left
+                        anchors.right: briefText.right
+                        anchors.margins: 2
+                        opacity: 0
+                        height: 0
+                    }
+
+                    states: State {
+                        name: "editing"
+                        PropertyChanges {
+                            target: detailEdit
+                            opacity: 1
+                            height: itemRoot.ListView.view.height - briefText.height
+                            focus: true
+                        }
+                        PropertyChanges {
+                            target: itemRoot.ListView.view
+                            interactive: false
+                        }
+                    }
+                    transitions: Transition {
+                        SequentialAnimation {
+                            NumberAnimation {
+                                properties: "opacity,height"
+                                duration: 300
+                                easing.type: Easing.InOutQuad
+                            }
+                            ScriptAction {
+                                script: {
+                                    var pos = itemRoot.ListView.view.contentY;
+                                    var destPos;
+                                    itemRoot.ListView.view.positionViewAtIndex(
+                                            index, ListView.Begining);
+                                    destPos = itemRoot.ListView.view.contentY;
+                                    scrollAnim.from = pos;
+                                    scrollAnim.to = destPos;
+                                    scrollAnim.running = true;
+
+                                    flyout.enableDetect = itemRoot.state === "";
+                                    if (!flyout.enableDetect) flyout.show = false;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -86,7 +154,7 @@ ColumnLayout {
                         implicitWidth: 25
                         iconSource: "qrc:/images/Gear_icon.png"
                         onClicked: {
-                            detailSettings.compact = false;
+                            detailSettings.compact = false
                         }
                     }
                 }
@@ -96,7 +164,7 @@ ColumnLayout {
                         implicitWidth: root.buttonWidth
                         iconSource: "qrc:/images/Yes_icon.png"
                         onClicked: {
-                            detailSettings.compact = true;
+                            detailSettings.compact = true
                         }
                     }
                 }
@@ -153,6 +221,7 @@ ColumnLayout {
                 PropertyChanges {
                     target: flyout
                     enableDetect: false
+                    show: true
                 }
                 PropertyChanges {
                     target: transformerList
