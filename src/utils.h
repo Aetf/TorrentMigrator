@@ -17,12 +17,29 @@ public:
     static QString normalizeSeperator(const QString &path);
 };
 
-class AutoObjectList
+template<typename T>
+class AutoList
 {
 public:
-    ~AutoObjectList();
-    QList<QObject*> list;
+    AutoList(const QList<T*> &list = QList<T*>());
+    ~AutoList();
+
+    QList<T*> list;
 };
 
+typedef AutoList<QObject> AutoObjectList;
+
+template<typename T>
+AutoList<T>::~AutoList()
+{
+    for (auto obj : list) {
+        delete obj;
+    }
+}
+
+template<typename T>
+AutoList<T>::AutoList(const QList<T*> &list)
+    : list(list)
+{ }
 
 #endif // UTILS_H
