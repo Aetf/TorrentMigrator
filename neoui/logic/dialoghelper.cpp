@@ -2,9 +2,7 @@
 #include "dialoghelper.h"
 
 DialogHelper::DialogHelper(QObject *parent) : QObject(parent)
-{
-
-}
+{ }
 
 QString DialogHelper::getExistingDirectory(const QString &caption,
                                            const QString &dir) const
