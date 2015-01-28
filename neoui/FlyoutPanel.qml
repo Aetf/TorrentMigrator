@@ -8,17 +8,10 @@ Item {
 
     default property alias content: placeholder.children
     property bool enableDetect: false
-
-    function show() {
-        root.state = "show"
-    }
-
-    function hide() {
-        root.state = "hide"
-    }
+    property bool show: true
 
     onEnableDetectChanged: {
-        if (!enableDetect) show();
+        show = enableDetect ? show : true;
     }
 
     MouseArea {
@@ -28,10 +21,7 @@ Item {
 
         onContainsMouseChanged: {
             if (enableDetect) {
-                if (containsMouse)
-                    show();
-                else
-                    hide();
+                root.show = containsMouse;
             }
         }
 
@@ -42,10 +32,10 @@ Item {
         }
     }
 
-    state: "show"
     states: [
         State {
             name: "show"
+            when: show
             PropertyChanges {
                 target: placeholder
                 y: 0
@@ -53,6 +43,7 @@ Item {
         },
         State {
             name: "hide"
+            when: !show
             PropertyChanges {
                 target: placeholder
                 y: placeholder.implicitHeight
