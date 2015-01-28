@@ -14,37 +14,14 @@ Item {
     property real spacing: 5
     property real animationDuration: 200
     property int easingType: Easing.InOutQuart
+    property bool compact: true
 
     function compactWidth() {
         return buttonWidth;
     }
 
     function fullWidth() {
-//        var actualSize = extraButtons.length + 1;
-//        return actualSize * buttonWidth + spacing * (actualSize - 1);
         return extraButtonBox.width + spacing + buttonWidth;
-    }
-
-    function expand() {
-        state = "full";
-    }
-
-    function collapse() {
-        state = "compact"
-    }
-
-    Component.onCompleted: {
-        // create mainButton and alternativeButton
-        mainButton.createObject(
-                    mainButtonBox,
-                    {
-                        "anchors.fill": mainButtonBox,
-                    });
-        alternativeButton.createObject(
-                    alternativeButtonBox,
-                    {
-                        "anchors.fill": alternativeButtonBox
-                    });
     }
 
     Loader {
@@ -86,7 +63,7 @@ Item {
         spacing: parent.spacing
     }
 
-    state: "compact"
+    state: compact ? "compact" : "full"
     states: [
         State {
             name: "compact"

@@ -15,10 +15,10 @@ Button {
 
     text: briefText
 
-    state: "brief"
+    state: "compact"
     states: [
         State {
-            name: "brief"
+            name: "compact"
             PropertyChanges {
                 target: root
                 implicitWidth: briefWidth
@@ -26,7 +26,7 @@ Button {
             }
         },
         State {
-            name: "detail"
+            name: "full"
             PropertyChanges {
                 target: root
                 implicitWidth: detailWidth
@@ -43,7 +43,7 @@ Button {
             }
         },
         Transition {
-            to: "brief"
+            to: "compact"
             SequentialAnimation {
                 PropertyAnimation {
                     property: "implicitWidth"

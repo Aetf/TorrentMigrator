@@ -24,6 +24,8 @@ ColumnLayout {
         detailText: qsTr("Transfer To Right ►")
         animationDuration: root.animationDuration
         easingType: root.easingType
+
+        state: detailSettings.state
     }
 
     Item {
@@ -34,16 +36,29 @@ ColumnLayout {
 
         clip: true
 
-        Rectangle {
+        ListView {
             id: transformationList
-            anchors { top: parent.top; right: parent.right; bottom: parent.bottom; left: parent.left }
+            anchors.fill: parent
             implicitHeight: 200
+            model: TransformerModel { }
+            delegate: listDelegate
+            highlight: listHighLight
 
-            color: "orange"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: {
-                    console.log(RecordsTransformerFactory.testPointer(RecordsTransformerFactory.createTest()));
+            Component {
+                id: listDelegate
+                Text {
+                    text: model.name
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: transformationList.currentIndex = index
+                    }
+                }
+            }
+            Component {
+                id: listHighLight
+                Rectangle {
+                    color: "lightblue"
+                    radius: 5
                 }
             }
         }
@@ -62,45 +77,63 @@ ColumnLayout {
                 buttonWidth: root.buttonWidth
                 animationDuration: root.animationDuration
                 easingType: root.easingType
+                compact: true
 
                 mainButton: Component {
                     Button {
                         implicitWidth: 25
-//                        iconSource: "qrc:/images/more.png"
-                        text: "..."
+                        iconSource: "qrc:/images/Gear_icon.png"
                         onClicked: {
-                            settingsButtonBox.expand();
-                            detailSettings.state = "full";
+                            detailSettings.state = "full"
                         }
                     }
                 }
 
                 alternativeButton: Component {
-                    Image {
-//                        implicitWidth: 25
-                        width: 25
-                        source: "qrc:/images/more.png"
-//                        text: "OK"
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: {
-                                settingsButtonBox.collapse();
-                                detailSettings.state = "compact";
-                            }
+                    Button {
+                        implicitWidth: root.buttonWidth
+                        iconSource: "qrc:/images/Yes_icon.png"
+                        onClicked: {
+                            detailSettings.state = "compact"
                         }
                     }
                 }
 
-                Repeater {
-                    model: ["yellow", "cyan", "green", "red"]
-
-                    Rectangle {
-                        height: root.buttonHeight
-                        width: root.buttonWidth
-                        radius: width / 2
-                        color: Qt.lighter(modelData)
+                Button {
+                    implicitWidth: root.buttonWidth
+                    iconSource: "qrc:/images/Up_icon.png"
+                    onClicked: {
+                        var cur = transformationList.currentIndex;
+                        if (cur === 0) return;
+                        transformationList.model.moveRow(cur, cur-1);
                     }
                 }
+                Button {
+                    implicitWidth: root.buttonWidth
+                    iconSource: "qrc:/images/Down_icon.png"
+                    onClicked: {
+                        var cur = transformationList.currentIndex;
+                        if (cur === transformationList.model.rowCount()-1) return;
+                        transformationList.model.moveRow(cur, cur+1);
+                    }
+                }
+                Button {
+                    implicitWidth: root.buttonWidth
+                    iconSource: "qrc:/images/Add_icon.png"
+                    onClicked: {
+                        var cur = transformationList.currentIndex;
+                        transformationList.model.insertRow(cur, "PathRegexTransformer");
+                    }
+                }
+                Button {
+                    implicitWidth: root.buttonWidth
+                    iconSource: "qrc:/images/Subtract_icon.png"
+                    onClicked: {
+                        var cur = transformationList.currentIndex;
+                        transformationList.model.removeRow(cur);
+                    }
+                }
+
             }
         }
 
@@ -114,16 +147,12 @@ ColumnLayout {
                     Layout.preferredWidth: settingsButtonBox.compactWidth()
                 }
                 PropertyChanges {
-                    target: btnTransferToRight
-                    state: "brief"
-                }
-                PropertyChanges {
-                    target: btnTransferToLeft
-                    state: "brief"
-                }
-                PropertyChanges {
                     target: flyout
                     enableDetect: false
+                }
+                PropertyChanges {
+                    target: settingsButtonBox
+                    compact: true
                 }
                 PropertyChanges {
                     target: transformationList
@@ -137,11 +166,13 @@ ColumnLayout {
                     Layout.preferredHeight: transformationList.implicitHeight
                     Layout.preferredWidth: settingsButtonBox.fullWidth()
                 }
-                PropertyChanges { target: btnTransferToRight; state: "detail" }
-                PropertyChanges { target: btnTransferToLeft; state: "detail" }
                 PropertyChanges {
                     target: flyout
                     enableDetect: true
+                }
+                PropertyChanges {
+                    target: settingsButtonBox
+                    compact: false
                 }
                 PropertyChanges {
                     target: transformationList
@@ -153,28 +184,47 @@ ColumnLayout {
             Transition {
                 to: "full"
                 SequentialAnimation {
-                    PropertyAction { target: transformationList; property: "visible" }
+                    PropertyAction {
+                        target: settingsButtonBox
+                        property: "compact"
+                    }
+                    PropertyAction {
+                        target: transformationList
+                        property: "visible"
+                    }
                     NumberAnimation {
                         properties: "Layout.preferredWidth,Layout.preferredHeight"
                         duration: root.animationDuration
                         easing.type: root.easingType
                     }
-                    PropertyAction { target: flyout; property: "enableDetect" }
+                    PropertyAction {
+                        target: flyout
+                        property: "enableDetect"
+                    }
                 }
             },
             Transition {
                 to: "compact"
                 SequentialAnimation {
-                    PropertyAction { target: flyout; property: "enableDetect" }
+                    PropertyAction {
+                        target: settingsButtonBox
+                        property: "compact"
+                    }
+                    PropertyAction {
+                        target: flyout
+                        property: "enableDetect"
+                    }
                     NumberAnimation {
                         properties: "Layout.preferredWidth,Layout.preferredHeight"
                         duration: root.animationDuration
                         easing.type: root.easingType
                     }
-                    PropertyAction { target: transformationList; property: "visible" }
+                    PropertyAction {
+                        target: transformationList
+                        property: "visible"
+                    }
                 }
             }
-
         ]
     }
 
@@ -189,5 +239,7 @@ ColumnLayout {
         detailText: qsTr("◄ Transfer To Left")
         animationDuration: root.animationDuration
         easingType: root.easingType
+
+        state: detailSettings.state
     }
 }

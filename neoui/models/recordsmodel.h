@@ -30,7 +30,7 @@ class RecordsModel : public QIdentityProxyModel
     Q_ENUMS(ColumnRoles)
     Q_ENUMS(ColumnCount)
 public:
-    explicit RecordsModel(QObject *parent = 0);
+    explicit RecordsModel(QObject *parent = nullptr);
     ~RecordsModel();
 
     bool busy() const;

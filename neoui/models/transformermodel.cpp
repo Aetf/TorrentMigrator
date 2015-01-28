@@ -1,13 +1,11 @@
 #include "transformermodel.h"
 
-TransformerModel::TransformerModel()
-{
-
-}
+TransformerModel::TransformerModel(QObject *parent)
+    : QAbstractListModel(parent)
+{ }
 
 TransformerModel::~TransformerModel()
-{
-}
+{ }
 
 int TransformerModel::rowCount(const QModelIndex &parent) const
 {
@@ -19,6 +17,7 @@ QHash<int, QByteArray> TransformerModel::roleNames() const
 {
     auto hash = QAbstractListModel::roleNames();
     hash[ArgsRole] = "args";
+    hash[Qt::DisplayRole] = "name";
 
     return hash;
 }
@@ -61,6 +60,7 @@ bool TransformerModel::setData(const QModelIndex &index, const QVariant &value, 
 
 bool TransformerModel::insertRow(int row, const QString &name)
 {
+    if (row == -1) { row = rowCount(); }
     beginInsertRows(QModelIndex(), row, row);
     nameList.insert(row, name);
     argsList.insert(row, QVariantMap());

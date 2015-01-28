@@ -5,9 +5,11 @@
 #include <QStyle>
 #include <QtQml>
 #include "models/recordsmodel.h"
+#include "models/transformermodel.h"
 #include "models/recordsaccessorfactory.h"
 #include "models/recordstransformerfactory.h"
 #include "logic/dialoghelper.h"
+#include "logic/transferhelper.h"
 
 void registerRecordsModel();
 
@@ -40,7 +42,10 @@ void registerRecordsModel()
                                                         "RecordsTransformerFactory",
                                                         RecordsTransformerFactory::RecordsTransformerFactoryProvider);
     qmlRegisterType<RecordsModel>("RecordsModel", 1, 0, "RecordsModel");
+    qmlRegisterType<TransformerModel>("RecordsModel", 1, 0, "TransformerModel");
 
     qmlRegisterSingletonType<DialogHelper>("RecordsModel", 1, 0, "DialogHelper",
                                            DialogHelper::DialogHelperProvider);
+    qmlRegisterSingletonType<TransferHelper>("RecordsModel", 1, 0, "TransferHelper",
+                                             TransferHelper::TransferHelperProvider);
 }
