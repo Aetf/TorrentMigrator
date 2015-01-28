@@ -63,16 +63,17 @@ Item {
         spacing: parent.spacing
     }
 
-    state: compact ? "compact" : "full"
     states: [
         State {
             name: "compact"
+            when: compact
             PropertyChanges { target: root; implicitWidth: compactWidth() }
             PropertyChanges { target: mainButtonBox; opacity: 1; enabled: true}
             PropertyChanges { target: alternativeButtonBox; opacity: 0; enabled: false}
         },
         State {
             name: "full"
+            when: !compact
             PropertyChanges { target: root; implicitWidth: fullWidth() }
             PropertyChanges { target: mainButtonBox; opacity: 0; enabled: false}
             PropertyChanges { target: alternativeButtonBox; opacity: 1; enabled: true}

@@ -34,10 +34,12 @@ ColumnLayout {
         Layout.preferredHeight: root.buttonHeight
         Layout.preferredWidth: root.buttonWidth
 
+        property bool compact: true
+
         clip: true
 
         ListView {
-            id: transformationList
+            id: transformerList
             anchors.fill: parent
             implicitHeight: 200
             model: TransformerModel { }
@@ -50,7 +52,7 @@ ColumnLayout {
                     text: model.name
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: transformationList.currentIndex = index
+                        onClicked: transformerList.currentIndex = index
                     }
                 }
             }
@@ -77,14 +79,14 @@ ColumnLayout {
                 buttonWidth: root.buttonWidth
                 animationDuration: root.animationDuration
                 easingType: root.easingType
-                compact: true
+                compact: detailSettings.compact
 
                 mainButton: Component {
                     Button {
                         implicitWidth: 25
                         iconSource: "qrc:/images/Gear_icon.png"
                         onClicked: {
-                            detailSettings.state = "full"
+                            detailSettings.compact = false;
                         }
                     }
                 }
@@ -94,7 +96,7 @@ ColumnLayout {
                         implicitWidth: root.buttonWidth
                         iconSource: "qrc:/images/Yes_icon.png"
                         onClicked: {
-                            detailSettings.state = "compact"
+                            detailSettings.compact = true;
                         }
                     }
                 }
@@ -103,44 +105,46 @@ ColumnLayout {
                     implicitWidth: root.buttonWidth
                     iconSource: "qrc:/images/Up_icon.png"
                     onClicked: {
-                        var cur = transformationList.currentIndex;
-                        if (cur === 0) return;
-                        transformationList.model.moveRow(cur, cur-1);
+                        var cur = transformerList.currentIndex
+                        if (cur === 0)
+                            return
+                        transformerList.model.moveRow(cur, cur - 1)
                     }
                 }
                 Button {
                     implicitWidth: root.buttonWidth
                     iconSource: "qrc:/images/Down_icon.png"
                     onClicked: {
-                        var cur = transformationList.currentIndex;
-                        if (cur === transformationList.model.rowCount()-1) return;
-                        transformationList.model.moveRow(cur, cur+1);
+                        var cur = transformerList.currentIndex
+                        if (cur === transformerList.model.rowCount() - 1)
+                            return
+                        transformerList.model.moveRow(cur, cur + 1)
                     }
                 }
                 Button {
                     implicitWidth: root.buttonWidth
                     iconSource: "qrc:/images/Add_icon.png"
                     onClicked: {
-                        var cur = transformationList.currentIndex;
-                        transformationList.model.insertRow(cur, "PathRegexTransformer");
+                        var cur = transformerList.currentIndex
+                        transformerList.model.insertRow(cur,
+                                                        "PathRegexTransformer")
                     }
                 }
                 Button {
                     implicitWidth: root.buttonWidth
                     iconSource: "qrc:/images/Subtract_icon.png"
                     onClicked: {
-                        var cur = transformationList.currentIndex;
-                        transformationList.model.removeRow(cur);
+                        var cur = transformerList.currentIndex
+                        transformerList.model.removeRow(cur)
                     }
                 }
-
             }
         }
 
-        state: "compact"
         states: [
             State {
                 name: "compact"
+                when: detailSettings.compact
                 PropertyChanges {
                     target: detailSettings
                     Layout.preferredHeight: root.buttonHeight
@@ -151,19 +155,16 @@ ColumnLayout {
                     enableDetect: false
                 }
                 PropertyChanges {
-                    target: settingsButtonBox
-                    compact: true
-                }
-                PropertyChanges {
-                    target: transformationList
+                    target: transformerList
                     visible: false
                 }
             },
             State {
                 name: "full"
+                when: !detailSettings.compact
                 PropertyChanges {
                     target: detailSettings
-                    Layout.preferredHeight: transformationList.implicitHeight
+                    Layout.preferredHeight: transformerList.implicitHeight
                     Layout.preferredWidth: settingsButtonBox.fullWidth()
                 }
                 PropertyChanges {
@@ -171,11 +172,7 @@ ColumnLayout {
                     enableDetect: true
                 }
                 PropertyChanges {
-                    target: settingsButtonBox
-                    compact: false
-                }
-                PropertyChanges {
-                    target: transformationList
+                    target: transformerList
                     visible: true
                 }
             }
@@ -185,11 +182,7 @@ ColumnLayout {
                 to: "full"
                 SequentialAnimation {
                     PropertyAction {
-                        target: settingsButtonBox
-                        property: "compact"
-                    }
-                    PropertyAction {
-                        target: transformationList
+                        target: transformerList
                         property: "visible"
                     }
                     NumberAnimation {
@@ -207,10 +200,6 @@ ColumnLayout {
                 to: "compact"
                 SequentialAnimation {
                     PropertyAction {
-                        target: settingsButtonBox
-                        property: "compact"
-                    }
-                    PropertyAction {
                         target: flyout
                         property: "enableDetect"
                     }
@@ -220,7 +209,7 @@ ColumnLayout {
                         easing.type: root.easingType
                     }
                     PropertyAction {
-                        target: transformationList
+                        target: transformerList
                         property: "visible"
                     }
                 }

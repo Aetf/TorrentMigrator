@@ -62,8 +62,7 @@ Item {
         }
 
         function toggle() {
-            if (expanded) hide();
-            else show();
+            expanded = !expanded;
         }
 
         function show(src) {
@@ -71,11 +70,7 @@ Item {
                 backendConfigPanel.source = src;
             }
 
-            backendConfigPanel.state = "expanded";
-        }
-
-        function hide() {
-            backendConfigPanel.state = "collapsed";
+            backendConfigPanel.expanded = true;
         }
 
         Loader {
@@ -88,27 +83,26 @@ Item {
                     var args = panelPlaceHolder.item.getConfigedArgs();
                     var name = panelPlaceHolder.item.name;
                     recordsModel.setAccessor(name, args);
-                    backendConfigPanel.hide();
+                    backendConfigPanel.expanded = false;
                 }
             }
         }
 
-        state: "collapsed"
         states: [
             State {
                 name: "collapsed"
+                when: !backendConfigPanel.expanded
                 PropertyChanges {
                     target: backendConfigPanel
                     height: 0
-                    expanded: false
                 }
             },
             State {
                 name: "expanded"
+                when: backendConfigPanel.expanded
                 PropertyChanges {
                     target: backendConfigPanel
                     height: panelPlaceHolder.implicitHeight
-                    expanded: true
                 }
             }
         ]
@@ -135,7 +129,7 @@ Item {
             id: torrentsList
             anchors.fill: parent
             model: recordsModel;
-//            selectionMode: SelectionMode.MultiSelection
+            selectionMode: SelectionMode.MultiSelection
 
             onModelChanged: {
                 model.modelReset.connect(populateHeaderData);
