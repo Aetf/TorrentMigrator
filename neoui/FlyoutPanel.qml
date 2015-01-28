@@ -34,12 +34,12 @@ Item {
                     hide();
             }
         }
-    }
 
-    Item {
-        id: placeholder
-        implicitWidth: childrenRect.width
-        implicitHeight: childrenRect.height
+        Item {
+            id: placeholder
+            implicitWidth: childrenRect.width
+            implicitHeight: childrenRect.height
+        }
     }
 
     state: "show"
