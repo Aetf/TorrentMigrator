@@ -85,6 +85,9 @@ ColumnLayout {
                         style: TextAreaStyle {
                             backgroundColor: "#BBFFFFFF"
                         }
+                        onTextChanged: {
+                            itemRoot.ListView.view.model[index].args = text;
+                        }
                     }
                 }
 
@@ -169,18 +172,19 @@ ColumnLayout {
 
             Flickable {
                 id: flickable
-                height: root.buttonHeight
-                width: detailSettings.width
-                contentHeight: root.buttonHeight
+                height: root.buttonHeight * 1.6
+                width: contentItem.childrenRect.width
+                contentHeight: contentItem.childrenRect.height
                 contentWidth: contentItem.childrenRect.width
+                pixelAligned: true
                 MouseArea {
                     anchors.fill: parent
                     onWheel: {
-                        flickable.flick(wheel.angleDelta.y * 1.5, 0);
+                        flickable.flick(0, wheel.angleDelta.y * 1.5);
                     }
                 }
 
-                Row {
+                Column {
                     Button {
                         text: "PathRegex"
                         onClicked: {
