@@ -1,7 +1,9 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
+import QtQuick.Controls.Styles 1.2
 import QtQuick.Layouts 1.1
 import RecordsModel 1.0
+import "3rdparty"
 
 Item {
     id: root
@@ -162,10 +164,22 @@ Item {
             }
         }
 
-        BusyIndicator {
+        CustomBusyIndicator {
             anchors.centerIn: torrentsList
+            width: 250
+            height: 250
             running: recordsModel.busy
             visible: recordsModel.busy
+
+            bLines: 10
+            bLength: 15
+            bWidth: 7
+            bRadius: 5
+            bCorner: 1
+            bSpeed: 100
+            bTrail: 0.5
+            bOpacity: 0.5
+            bBgColor: "transparent"
         }
 
         Component {

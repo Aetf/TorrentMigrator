@@ -16,5 +16,7 @@
         <file>images/Yes_icon.png</file>
         <file>images/Up_icon.png</file>
         <file>images/Down_icon.png</file>
+        <file>3rdparty/CustomBusyIndicator.qml</file>
+        <file>3rdparty/CustomBusyIndicatorStyle.qml</file>
     </qresource>
 </RCC>
