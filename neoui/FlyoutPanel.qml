@@ -25,6 +25,7 @@ Item {
             id: placeholder
             implicitWidth: childrenRect.width
             implicitHeight: childrenRect.height
+            clip: true
         }
     }
 
