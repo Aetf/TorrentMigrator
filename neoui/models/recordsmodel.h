@@ -12,11 +12,11 @@ class ColumnRoles : public QObject
     Q_ENUMS(ColumnCount)
 public:
     enum Roles {
-        NaturalIndexRole = Qt::UserRole + BasicTorrentModel::Col_No,
-        NameRole = Qt::UserRole + BasicTorrentModel::Col_Name,
-        TorrentPathRole = Qt::UserRole + BasicTorrentModel::Col_TorrentPath,
-        SavePathRole = Qt::UserRole + BasicTorrentModel::Col_SavePath,
-        State = Qt::UserRole + BasicTorrentModel::Col_State,
+        NaturalIndexRole = BasicTorrentModel::UnusedRole + BasicTorrentModel::Col_No,
+        NameRole = BasicTorrentModel::UnusedRole + BasicTorrentModel::Col_Name,
+        TorrentPathRole =BasicTorrentModel::UnusedRole + BasicTorrentModel::Col_TorrentPath,
+        SavePathRole = BasicTorrentModel::UnusedRole + BasicTorrentModel::Col_SavePath,
+        State = BasicTorrentModel::UnusedRole + BasicTorrentModel::Col_State,
     };
     enum ColumnCount {
         ColumnCount = BasicTorrentModel::ColCount

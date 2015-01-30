@@ -18,6 +18,7 @@ class BasicTorrentModel : public QAbstractTableModel
 public:
     enum Roles {
         RecordDataRole = Qt::UserRole + 1,
+        UnusedRole
     };
 
     enum Columns {

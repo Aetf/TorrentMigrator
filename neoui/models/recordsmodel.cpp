@@ -89,7 +89,7 @@ int RecordsModel::columnRoleToSection(int role) const
     case ColumnRoles::TorrentPathRole:
     case ColumnRoles::SavePathRole:
     case ColumnRoles::State:
-        return role - Qt::UserRole;
+        return role - BasicTorrentModel::UnusedRole;
     default:
         return 0;
     }
