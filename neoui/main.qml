@@ -1,6 +1,7 @@
 import QtQuick 2.3
 import QtQuick.Controls 1.2
 import QtQuick.Layouts 1.1
+import RecordsModel 1.0
 
 ApplicationWindow {
     id: root
@@ -40,6 +41,28 @@ ApplicationWindow {
         TransferButtonBox {
             id: middleColumn
             anchors.centerIn: parent
+
+            function selectionToArray(sel) {
+                var arr = [];
+                sel.forEach(function(idx){
+                    arr.push(idx);
+                });
+
+                console.log(arr.length);
+                return arr;
+            }
+
+            function transfer(from, to) {
+                var sel = selectionToArray(from.selection);
+                TransferHelper.transfer(from.model, sel, middleColumn.model, to.model);
+            }
+
+            btnTransferToRight.onClicked: {
+                transfer(leftColumn, rightColumn);
+            }
+            btnTransferToLeft.onClicked: {
+                transfer(rightColumn, leftColumn);
+            }
         }
 
         TorrentsColumn {

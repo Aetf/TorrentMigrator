@@ -9,7 +9,9 @@ Item {
     property real verticalSpacing: 5
     property real horizontalSpacing: 0
     property alias title: titleLabel.text
-    property alias backendModel: backendCombo.model
+//    property alias backendModel: backendCombo.model
+    property alias model: recordsModel
+    property alias selection: torrentsList.selection
 
     RowLayout {
         id: backendChooser

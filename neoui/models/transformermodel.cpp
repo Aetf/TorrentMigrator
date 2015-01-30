@@ -17,6 +17,7 @@ QHash<int, QByteArray> TransformerModel::roleNames() const
 {
     auto hash = QAbstractListModel::roleNames();
     hash[ArgsRole] = "args";
+    hash[ArgsStrRole] = "argsStr";
     hash[Qt::DisplayRole] = "name";
 
     return hash;
@@ -29,6 +30,8 @@ QVariant TransformerModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case ArgsRole:
         return argsList.at(index.row());
+    case ArgsStrRole:
+        return argsStrList.at(index.row());
     case Qt::DisplayRole:
         return nameList.at(index.row());
     }
@@ -44,6 +47,12 @@ bool TransformerModel::setData(const QModelIndex &index, const QVariant &value, 
     case ArgsRole:
         if (value.canConvert<QVariantMap>()) {
             argsList[index.row()] = value.toMap();
+            return true;
+        }
+        break;
+    case ArgsStrRole:
+        if (value.canConvert<QString>()) {
+            argsStrList[index.row()] = value.toString();
             return true;
         }
         break;
@@ -64,6 +73,7 @@ bool TransformerModel::insertRow(int row, const QString &name)
     beginInsertRows(QModelIndex(), row, row);
     nameList.insert(row, name);
     argsList.insert(row, QVariantMap());
+    argsStrList.insert(row, QString());
     endInsertRows();
 
     return true;
@@ -76,6 +86,7 @@ bool TransformerModel::removeRow(int row)
     beginRemoveRows(QModelIndex(), row, row);
     nameList.removeAt(row);
     argsList.removeAt(row);
+    argsStrList.removeAt(row);
     endRemoveRows();
 
     return true;
@@ -95,6 +106,7 @@ bool TransformerModel::moveRow(int from, int to)
 
     nameList.move(from, to);
     argsList.move(from, to);
+    argsStrList.move(from, to);
     endMoveRows();
 
     return true;

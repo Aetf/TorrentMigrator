@@ -9,6 +9,7 @@ ColumnLayout {
 
     property alias btnTransferToRight: btnTransferToRight
     property alias btnTransferToLeft: btnTransferToLeft
+    property alias model: transformerList.model
     property real buttonHeight: 25
     property real buttonWidth: 25
     property real animationDuration: 350
@@ -80,13 +81,14 @@ ColumnLayout {
                         id: detailEdit
                         width: parent.width
                         height: itemRoot.ListView.view.height - briefText.height - 3
-                        inputMethodHints: Qt.ImhNoAutoUppercase
                         frameVisible: false
+                        inputMethodHints: Qt.ImhNoAutoUppercase
+                        wrapMode: TextEdit.NoWrap
                         style: TextAreaStyle {
                             backgroundColor: "#BBFFFFFF"
                         }
                         onTextChanged: {
-                            itemRoot.ListView.view.model[index].args = text;
+                            model.argsStr = text;
                         }
                     }
                 }

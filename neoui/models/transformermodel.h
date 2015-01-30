@@ -27,10 +27,12 @@ public:
 
     enum RoleNames {
         ArgsRole = Qt::UserRole,
+        ArgsStrRole
     };
 
 private:
     QList<QVariantMap> argsList;
+    QList<QString> argsStrList;
     QList<QString> nameList;
 };
 

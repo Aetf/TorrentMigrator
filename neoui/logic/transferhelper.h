@@ -17,11 +17,11 @@ public:
 
     Q_INVOKABLE
     bool transfer(RecordsModel *sourceModel, QList<int> selection,
-                  const TransformerModel *transModel, RecordsModel *targetModel);
+                  TransformerModel *transModel, RecordsModel *targetModel);
 
     static QObject *TransferHelperProvider(QQmlEngine *engine, QJSEngine *scriptEngine);
 private:
-    QList<IRecordsTransformer *> createTransformersFromModel(const TransformerModel *model);
+    QList<IRecordsTransformer *> createTransformersFromModel(TransformerModel *model);
 };
 
 #endif // TRANSFERHELPER_H
