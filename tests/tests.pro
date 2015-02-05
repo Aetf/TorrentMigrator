@@ -4,9 +4,12 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= app_bundle
 
-# Link to library to be tested
+DESTDIR = $$OUT_PWD
+
+# link to internal src libraries
+unix:PRE_TARGETDEPS += $$OUT_PWD/../src/libtorrentBackends.a
+win32:PRE_TARGETDEPS += $$OUT_PWD/../src/torrentBackends.lib
 LIBS   += -L../src -ltorrentBackends
-LIBS   += -lQBencode -lPocoFoundation
 
 # Include gtest headers as a system header to avoid compiler warnings in it.
 QMAKE_INCDIR += gtest
@@ -15,9 +18,10 @@ SOURCES += gtest/gtest-all-strip.cc gtest/main.cpp \
     test_utorrentaccessor.cpp \
     test_libtorrentaccessor.cpp
 
+OTHER_FILES += scripts/*
+
 # Test runner wrappers
-wrapper_scripts = runtests.sh runtests.bat
-test_wrappers.commands = cd $${PWD} && cp $${wrapper_scripts} $${OUT_PWD}
-OTHER_FILES += $${wrapper_scripts}
+unix:test_wrappers.commands = cd $${PWD} && cp scripts/* $${OUT_PWD}
+win32:test_wrappers.commands = cd /d $${PWD} && xcopy \"scripts/*\" \"$${OUT_PWD}\"
 QMAKE_EXTRA_TARGETS += test_wrappers
 PRE_TARGETDEPS += test_wrappers

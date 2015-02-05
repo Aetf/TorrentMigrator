@@ -7,7 +7,8 @@ QT       += concurrent
 TARGET   =  torrentBackends
 CONFIG   -= app_bundle
 CONFIG   += staticlib
-LIBS     += -lQBencode -lPocoFoundation
+
+DESTDIR = $$OUT_PWD/
 
 SOURCES  += \
     torrentrecord.cpp \

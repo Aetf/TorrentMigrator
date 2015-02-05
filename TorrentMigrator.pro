@@ -3,6 +3,7 @@ TARGET = TorrentMigrator
 CONFIG += ordered
 
 SUBDIRS = \
+    external \
     src \
     app \
     neoui \
@@ -13,6 +14,7 @@ OTHER_FILES += \
 app.depends = src
 neoui.depends = src
 tests.depends = src
+src.depends = external
 
 # A custom target to directly run tests
 runtests.depends = all

@@ -4,10 +4,12 @@ TEMPLATE = app
 QT       += core qml quick widgets
 CONFIG   -= app_bundle
 
-# link to libraries
-PRE_TARGETDEPS += ../src/libtorrentBackends.a
+# link to internal src libraries
+unix:PRE_TARGETDEPS += $$OUT_PWD/../src/libtorrentBackends.a
+win32:PRE_TARGETDEPS += $$OUT_PWD/../src/torrentBackends.lib
 LIBS     += -L../src -ltorrentBackends
-LIBS     += -lQBencode -lPocoFoundation
+
+INCLUDEPATH += $$PWD
 
 HEADERS += \
     models/recordsmodel.h \

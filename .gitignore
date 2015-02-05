@@ -4,5 +4,8 @@
 # build dir
 build/*
 
+# Sublime text workspace file
+*.sublime-workspace
+
 # ignore large test dat
 tests/data/*

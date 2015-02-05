@@ -1,0 +1,3 @@
+[submodule "external/QBencode"]
+	path = external/QBencode
+	url = https://github.com/Aetf/QBencode.git
