@@ -1,5 +1,6 @@
 #include <QBencodeValue>
 #include <QByteArray>
+#include <QDir>
 #include <QString>
 #include "utils.h"
 
@@ -44,4 +45,12 @@ QString Utils::normalizeSeperator(const QString &path)
 {
     QString copy(path);
     return normalizeSeperator(copy);
+}
+
+void Utils::ensurePath(const QString &path)
+{
+    QDir d(path);
+    if (!d.exists()) {
+        d.mkpath(path);
+    }
 }

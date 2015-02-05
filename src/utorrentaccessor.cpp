@@ -2,14 +2,12 @@
 #include <QBencodeValue>
 #include <QByteArray>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
-#include <Poco/Path.h>
 #include <cassert>
 #include "simpletorrentinfo.h"
 #include "utorrentaccessor.h"
 #include "utils.h"
-
-using Poco::Path;
 
 uTorrentAccessor::uTorrentAccessor()
     : ready(false)
@@ -46,9 +44,7 @@ bool uTorrentAccessor::setup(QVariantMap args)
 
 bool uTorrentAccessor::loadResumeData()
 {
-    Path p = Path::forDirectory(appdataPath.toStdString());
-    p.setFileName("resume.dat");
-    QFile resumeFile(p.toString().c_str());
+    QFile resumeFile(appdataPath + "/resume.dat");
     if (!resumeFile.open(QIODevice::ReadOnly)) {
         qDebug() << "file open failed on" << resumeFile.fileName();
         return false;
@@ -73,9 +69,8 @@ bool uTorrentAccessor::loadResumeData()
 
 bool uTorrentAccessor::writeResumeData()
 {
-    Path p = Path::forDirectory(appdataPath.toStdString());
-    p.setFileName("resume.dat");
-    QFile resumeFile(p.toString().c_str());
+    Utils::ensurePath(appdataPath);
+    QFile resumeFile(appdataPath + "/resume.dat");
     if (!resumeFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         qDebug() << "file open failed on" << resumeFile.fileName();
         return false;
@@ -282,37 +277,38 @@ bool uTorrentAccessor::fillStorageInfo(TorrentRecord &record,
 
 void uTorrentAccessor::fillSavePath(TorrentRecord &record, const QBencodeDict &uTorrentRecord)
 {
+    QString path = Utils::normalizeSeperator(uTorrentRecord["path"].toString());
+    path = QDir::cleanPath(path);
+    Q_ASSERT(!path.isEmpty());
+
     // should only save parent directory
-    auto rawpath = uTorrentRecord["path"].toString().toStdString();
-    Path p(rawpath, Path::PATH_WINDOWS);
-    record.save_path = p.parent().toString(Path::PATH_WINDOWS).c_str();
-    // use slash instead of back slash
-    Utils::normalizeSeperator(record.save_path);
+    path = path.left(path.lastIndexOf('/') + 1);
+    Q_ASSERT(!path.isEmpty());
+
+    record.save_path = path;
 }
 
 std::pair<SimpleTorrentInfo, QString> uTorrentAccessor::loadTorrentFile(
     const QString &key)
 {
-    auto filename = Path(key.toStdString(), Path::PATH_WINDOWS).getFileName();
-    Path dir;
+    // Qt can't handle back slash when compiled in linux
+    // so change all to slash
+    auto filename = QFileInfo(Utils::normalizeSeperator(key)).fileName();
+    QDir dir;
     QString fullpath;
     SimpleTorrentInfo ti;
 
     // try appdata dir first
-    dir.assign(appdataPath.toStdString());
-    dir.makeDirectory();
-    dir.setFileName(filename);
-    fullpath = dir.toString().c_str();
-//    qDebug() << "uTorrentAccessor: try" << fullpath;
+    dir.setPath(appdataPath);
+    fullpath = dir.filePath(filename);
+    qDebug() << "uTorrentAccessor: try" << fullpath;
     if (ti.loadFile(fullpath)) { return std::make_pair(ti, fullpath); }
 
     // then try extra torrent dir if we have one
     if (!extraTorrentPath.isEmpty()) {
-        dir.assign(extraTorrentPath.toStdString());
-        dir.makeDirectory();
-        dir.setFileName(filename);
-        fullpath = dir.toString().c_str();
-//        qDebug() << "uTorrentAccessor: try" << fullpath;
+        dir.setPath(extraTorrentPath);
+        fullpath = dir.filePath(filename);
+        qDebug() << "uTorrentAccessor: try" << fullpath;
         if (ti.loadFile(fullpath)) { return std::make_pair(ti, fullpath); }
     }
 

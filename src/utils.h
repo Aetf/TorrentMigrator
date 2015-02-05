@@ -15,6 +15,7 @@ public:
     static qint64 dictFindLongLong(const QBencodeDict &dict, const QString &key, qint64 defaultVal);
     static QString normalizeSeperator(QString &path);
     static QString normalizeSeperator(const QString &path);
+    static void ensurePath(const QString &path);
 };
 
 template<typename T>

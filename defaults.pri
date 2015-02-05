@@ -15,4 +15,4 @@ win32:INCLUDEPATH   += $$PWD/external/QBencode/src/include
 LIBS                += -L$$OUT_PWD/../external/QBencode -lQBencode
 
 # PocoFoundation
-LIBS                += -lPocoFoundation
+#LIBS                += -lPocoFoundation

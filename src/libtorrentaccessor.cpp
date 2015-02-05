@@ -472,6 +472,7 @@ bool LibtorrentAccessor::hasResumeData(const QString &hash) const
 bool LibtorrentAccessor::saveResumeData(const QString &hash,
                                         const QBencodeDict &resumeData)
 {
+    Utils::ensurePath(backupDir);
     QFile f(backupDir + "/" + hash + ".fastresume");
     if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         qDebug() << "write to fastresume file failed:" << f.fileName();
