@@ -227,7 +227,6 @@ ColumnLayout {
 
                 mainButton: Component {
                     Button {
-                        implicitWidth: 25
                         iconSource: "qrc:/images/Gear_icon.png"
                         onClicked: {
                             detailSettings.compact = false
@@ -237,7 +236,6 @@ ColumnLayout {
 
                 alternativeButton: Component {
                     Button {
-                        implicitWidth: root.buttonWidth
                         iconSource: "qrc:/images/Yes_icon.png"
                         onClicked: {
                             detailSettings.compact = true
@@ -246,7 +244,8 @@ ColumnLayout {
                 }
 
                 Button {
-                    implicitWidth: root.buttonWidth
+                    width: root.buttonWidth
+                    height: root.buttonHeight
                     iconSource: "qrc:/images/Up_icon.png"
                     onClicked: {
                         var cur = transformerList.currentIndex
@@ -256,7 +255,8 @@ ColumnLayout {
                     }
                 }
                 Button {
-                    implicitWidth: root.buttonWidth
+                    width: root.buttonWidth
+                    height: root.buttonHeight
                     iconSource: "qrc:/images/Down_icon.png"
                     onClicked: {
                         var cur = transformerList.currentIndex
@@ -267,14 +267,16 @@ ColumnLayout {
                 }
                 Button {
                     id: addBtn
-                    implicitWidth: root.buttonWidth
+                    width: root.buttonWidth
+                    height: root.buttonHeight
                     iconSource: "qrc:/images/Add_icon.png"
                     onClicked: {
                         addMenu.show = !addMenu.show;
                     }
                 }
                 Button {
-                    implicitWidth: root.buttonWidth
+                    width: root.buttonWidth
+                    height: root.buttonHeight
                     iconSource: "qrc:/images/Subtract_icon.png"
                     onClicked: {
                         var cur = transformerList.currentIndex
