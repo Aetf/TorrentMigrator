@@ -8,7 +8,7 @@ TARGET   =  torrentBackends
 CONFIG   -= app_bundle
 CONFIG   += staticlib
 
-DESTDIR = $$OUT_PWD/
+win32:DESTDIR = $$OUT_PWD/
 
 SOURCES  += \
     torrentrecord.cpp \
