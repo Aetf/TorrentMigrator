@@ -159,14 +159,14 @@ bool uTorrentAccessor::readAll(QList<TorrentRecord> &list)
         if (!fillStorageInfo(record, uTorrentRecord, key)) { continue; }
 
         // statistics
-        record.total_downloaded = Utils::dictFindInt(uTorrentRecord, "downloaded", 0);
-        record.total_uploaded = Utils::dictFindInt(uTorrentRecord, "uploaded", 0);
-        record.active_time = Utils::dictFindInt(uTorrentRecord, "runtime", 0);
-        record.seeding_time = Utils::dictFindInt(uTorrentRecord, "seedtime", 0);
-        record.added_time = Utils::dictFindInt(uTorrentRecord, "added_on", 0);
-        record.complete_time = Utils::dictFindInt(uTorrentRecord, "completed_on", 0);
-        record.last_active = Utils::dictFindInt(uTorrentRecord, "last_active", 0);
-        record.last_seen_complete = Utils::dictFindInt(uTorrentRecord, "last seen complete", 0);
+        record.total_downloaded = Utils::dictFindLongLong(uTorrentRecord, "downloaded", 0);
+        record.total_uploaded = Utils::dictFindLongLong(uTorrentRecord, "uploaded", 0);
+        record.active_time = Utils::dictFindLongLong(uTorrentRecord, "runtime", 0);
+        record.seeding_time = Utils::dictFindLongLong(uTorrentRecord, "seedtime", 0);
+        record.added_time = Utils::dictFindLongLong(uTorrentRecord, "added_on", 0);
+        record.complete_time = Utils::dictFindLongLong(uTorrentRecord, "completed_on", 0);
+        record.last_active = Utils::dictFindLongLong(uTorrentRecord, "last_active", 0);
+        record.last_seen_complete = Utils::dictFindLongLong(uTorrentRecord, "last seen complete", 0);
 
         // per torrent settings
         record.max_connections = Utils::dictFindInt(uTorrentRecord, "max_connections", 0);
