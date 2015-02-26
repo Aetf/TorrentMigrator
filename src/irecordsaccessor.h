@@ -17,7 +17,7 @@ public:
     virtual bool setup(QVariantMap args) = 0;
     virtual bool readAll(QList<TorrentRecord> &list) = 0;
     virtual bool writeAll(QList<TorrentRecord> &records) = 0;
-    virtual bool add(const TorrentRecord &record) = 0;
+    virtual bool add(TorrentRecord &record) = 0;
     virtual bool update(const TorrentRecord &record) = 0;
     virtual bool remove(const QString &hash) = 0;
 };

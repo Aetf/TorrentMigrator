@@ -24,7 +24,7 @@ public:
     virtual bool setup(QVariantMap args);
     virtual bool readAll(QList<TorrentRecord> &list);
     virtual bool writeAll(QList<TorrentRecord> &records);
-    virtual bool add(const TorrentRecord &record);
+    virtual bool add(TorrentRecord &record);
     virtual bool update(const TorrentRecord &record);
     virtual bool remove(const QString &hash);
 

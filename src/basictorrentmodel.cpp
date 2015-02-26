@@ -114,12 +114,14 @@ bool BasicTorrentModel::insertRowsWithoutAddToBackend(int position,
 
 bool BasicTorrentModel::insertRecord(int position, const TorrentRecord &record)
 {
-    if (!accessor->add(record)) {
+    // make a local copy in case accessor->add changing it.
+    auto r(record);
+    if (!accessor->add(r)) {
         qDebug() << "Underlying backend insertion failed.";
         return false;
     }
     QList<BasicTorrentItem *> rowsToInsert;
-    rowsToInsert << new BasicTorrentItem(this, record);
+    rowsToInsert << new BasicTorrentItem(this, r);
     position = position == -1 ? items.size() : position;
     return insertRowsWithoutAddToBackend(position, rowsToInsert);
 }

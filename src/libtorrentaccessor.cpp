@@ -115,7 +115,7 @@ bool LibtorrentAccessor::writeAll(QList<TorrentRecord> &records)
     return true;
 }
 
-bool LibtorrentAccessor::add(const TorrentRecord &record)
+bool LibtorrentAccessor::add(TorrentRecord &record)
 {
     if (!ready) { return false; }
 
@@ -198,6 +198,7 @@ bool LibtorrentAccessor::add(const TorrentRecord &record)
             remove(record.info_hash);
             return false;
         }
+        record.torrent_path = targetPath;
     }
 
     return true;

@@ -90,7 +90,7 @@ bool uTorrentAccessor::writeResumeData()
     return true;
 }
 
-bool uTorrentAccessor::add(const TorrentRecord &/*record*/)
+bool uTorrentAccessor::add(TorrentRecord &/*record*/)
 {
     if (!ready) { return false; }
 
